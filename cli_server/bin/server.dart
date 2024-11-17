@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:shelf/shelf.dart';
@@ -8,6 +9,8 @@ import 'package:shelf_router/shelf_router.dart';
 final _router = Router()
   ..get('/', _rootHandler)
   ..get('/echo/<message>', _echoHandler);
+  // Blueprint
+  //..post('/items', _postItemHandler);
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
@@ -17,6 +20,16 @@ Response _echoHandler(Request request) {
   final message = request.params['message'];
   return Response.ok('$message\n');
 }
+
+// Blueprint
+// Future<Response> _postItemHandler(Request request) async {
+//   final data = await request.readAsString();
+//   final json = jsonDecode(data);
+
+//   print(json);
+
+//   return Response.ok("yey");
+// }
 
 void main(List<String> args) async {
   // Use any available host or container IP (usually `0.0.0.0`).

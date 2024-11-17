@@ -1,6 +1,5 @@
-
+import 'package:http/http.dart' as http;
 import 'dart:io';
-
 import '../models/person.dart';
 import '../repositories/person_repository.dart';
 import '../utils/console_utils.dart';
@@ -15,7 +14,8 @@ class PersonUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  void addNewPerson(){
+  Future<void> addNewPerson() async {
+
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till ny användare (Undvik å, ä, ö)\n");  
@@ -40,21 +40,21 @@ class PersonUi {
         continue;
       }
       
-      repoPerson.add(Person(ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName)));
+      await repoPerson.add(Person(ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName)));
       stdout.write("Personen har lagts till.");
       sleep(Duration(seconds: 3));        
       return;
     }  
 }
 
-void managePerson() {
+Future<void> managePerson() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nPersoner");
     stdout.writeln("Alla personer i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
-    var persons = repoPerson.getAll();
+    var persons = await repoPerson.getAll();
     if (persons.isEmpty) {
       stdout.writeln("Inga personer finns i systemet.");
       return;
@@ -114,13 +114,13 @@ void managePerson() {
         }
         
         Person newPerson = Person(ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName));
-        repoPerson.update(selectedPerson, newPerson);
+        await repoPerson.update(selectedPerson, newPerson);
         stdout.write("Person uppdaterad.");
         sleep(Duration(seconds: 3));        
         return;
       }
     } else if (action == 'd') { // Lets user delete person 
-      repoPerson.delete(selectedPerson);
+      await repoPerson.delete(selectedPerson);
       stdout.write("Person är borttagen.");
       sleep(Duration(seconds: 3)); 
     } else {

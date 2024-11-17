@@ -15,4 +15,10 @@ Namn: $firstName $lastName
    Personnr: $ssn
 -----------------------------------------------------------""";
   }
+
+  Map<String, dynamic> toJson() => {
+  'ssn' : ssn,
+  'firstname' : firstName,
+  'lastname' : lastName
+  };
 }

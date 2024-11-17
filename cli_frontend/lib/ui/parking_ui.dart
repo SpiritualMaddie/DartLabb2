@@ -1,5 +1,5 @@
+import 'package:http/http.dart' as http;
 import 'dart:io';
-
 import '../models/parking.dart';
 import '../repositories/parking_repository.dart';
 import '../repositories/parking_space_repository.dart';
@@ -22,7 +22,7 @@ class ParkingUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  void addNewParking(){
+  Future<void> addNewParking() async{
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till en ny parkering\n");  
@@ -30,7 +30,7 @@ class ParkingUi {
       stdout.writeln("Alla fordon i systemet:");
       stdout.writeln("\n-----------------------------------------------------------\n");
     
-      var vehicles = repoVehicle.getAll();
+      var vehicles = await repoVehicle.getAll();
       if (vehicles.isEmpty) {
         stdout.writeln("Inga fordon finns i systemet.");
         return;
@@ -72,7 +72,7 @@ class ParkingUi {
         stdout.writeln("Alla parkeringsplatser i systemet:");
         stdout.writeln("\n-----------------------------------------------------------\n");
       
-        var parkingSpaces = repoParkingSpace.getAll();
+        var parkingSpaces = await repoParkingSpace.getAll();
         if (parkingSpaces.isEmpty) {
           stdout.writeln("Inga parkeringsplatser finns i systemet.");
           return;
@@ -111,7 +111,7 @@ class ParkingUi {
 
         if(psChoice == "ja"){
 
-          repoParking.add(Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
+          await repoParking.add(Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
           stdout.write("Parkeringen har lagts till.");
           sleep(Duration(seconds: 3));        
           return;
@@ -131,14 +131,14 @@ class ParkingUi {
     }  
 }
 
-void manageParking() {
+Future<void> manageParking() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nParkeringar");
     stdout.writeln("Alla parkeringar i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
-    var parkings = repoParking.getAll();
+    var parkings = await repoParking.getAll();
     if (parkings.isEmpty) {
       stdout.writeln("Inga parkeringar finns i systemet.");
       return;
@@ -180,7 +180,7 @@ void manageParking() {
         stdout.writeln("Alla fordon i systemet:");
         stdout.writeln("\n-----------------------------------------------------------\n");
       
-        var vehicles = repoVehicle.getAll();
+        var vehicles = await repoVehicle.getAll();
         if (vehicles.isEmpty) {
           stdout.writeln("Inga fordon finns i systemet.");
           return;
@@ -222,7 +222,7 @@ void manageParking() {
           stdout.writeln("Alla parkeringsplatser i systemet:");
           stdout.writeln("\n-----------------------------------------------------------\n");
         
-          var parkingSpaces = repoParkingSpace.getAll();
+          var parkingSpaces = await repoParkingSpace.getAll();
           if (parkingSpaces.isEmpty) {
             stdout.writeln("Inga parkeringsplatser finns i systemet.");
             return;
@@ -268,7 +268,7 @@ void manageParking() {
               if(changeTime == "ja"){
 
                 Parking newParking = Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: DateTime.now());
-                repoParking.update(selectedParking, newParking);
+                await repoParking.update(selectedParking, newParking);
                 stdout.write("Parkeringen har lagts till.");
                 sleep(Duration(seconds: 3));
                 return;
@@ -279,7 +279,7 @@ void manageParking() {
             }
 
             Parking newParking = Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: selectedParking.endTime);
-            repoParking.update(selectedParking, newParking);
+            await repoParking.update(selectedParking, newParking);
             stdout.write("Parkeringen har lagts till.");
             sleep(Duration(seconds: 3));        
             return;
@@ -300,7 +300,7 @@ void manageParking() {
         
       }
     } else if (action == 'd') { // Lets user delete parking 
-      repoParking.delete(selectedParking);
+      await repoParking.delete(selectedParking);
       stdout.write("Parkeringen är borttagen.");
       sleep(Duration(seconds: 3)); 
     } else {
@@ -310,14 +310,14 @@ void manageParking() {
   }
 }
 
-void endParking(){
+Future<void> endParking() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nParkeringar");
     stdout.writeln("Alla aktiva parkeringar i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
-    var parkings = repoParking.getAll();
+    var parkings = await repoParking.getAll();
     var ongoingParkings = parkings.where((parking) => parking.endTime == null || parking.endTimeStatus == "pågående").toList();
     if (ongoingParkings.isEmpty) {
       stdout.writeln("Inga aktiva parkeringar finns i systemet.");
@@ -357,7 +357,7 @@ void endParking(){
       while (true) {
 
         Parking newParking = Parking(vehicle: selectedParking.vehicle, parkingSpace: selectedParking.parkingSpace, startTime: selectedParking.startTime, endTime: DateTime.now());
-        repoParking.update(selectedParking, newParking);
+        await repoParking.update(selectedParking, newParking);
         stdout.write("Parkeringen har avslutats.");
         sleep(Duration(seconds: 3));    
         return;
