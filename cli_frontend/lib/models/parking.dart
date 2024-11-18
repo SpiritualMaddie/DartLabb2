@@ -37,4 +37,22 @@ class Parking {
     Sluttid:  $formattedEndTime
 -----------------------------------------------------------""";
   }
+
+  Map<String, dynamic> toJson() => {
+    'vehicle' : {
+      'plateNumber' : vehicle.plateNumber,
+      'vehicleType' : vehicle.vehicleType,
+      'owner' : {
+        'ssn' : vehicle.owner.ssn,
+        'firstname' : vehicle.owner.firstName,
+        'lastname' : vehicle.owner.lastName
+      }
+    },
+    'parkingSpace' : {
+      'zone' : parkingSpace.zone,
+      'pricePerHour' : parkingSpace.pricePerHour
+    },
+    'startTime' : startTime,
+    'endTime' : endTime
+  };
 }

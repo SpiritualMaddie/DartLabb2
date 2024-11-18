@@ -1,3 +1,5 @@
 name: DartLabb1
 environment:
   sdk: '>=3.5.0 <4.0.0'
+dependencies:
+  http: ^1.2.2

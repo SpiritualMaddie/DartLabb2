@@ -20,4 +20,14 @@ Regnr: $plateNumber
     Ägare: ${owner.firstName} ${owner.lastName}
 -----------------------------------------------------------""";
   }
+
+  Map<String, dynamic> toJson() => {
+    'plateNumber' : plateNumber,
+    'vehicleType' : vehicleType,
+    'owner' : {
+        'ssn' : owner.ssn,
+        'firstname' : owner.firstName,
+        'lastname' : owner.lastName
+    }
+  };
 }

@@ -12,4 +12,9 @@ Zone: $zone
     ${pricePerHour} kr/h
 ---------------------------------""";
   }
+
+  Map<String, dynamic> toJson() => {
+  'zone' : zone,
+  'pricePerHour' : pricePerHour
+  };
 }

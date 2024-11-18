@@ -1,5 +1,5 @@
+import 'package:http/http.dart' as http;
 import 'dart:io';
-
 import '../models/vehicle.dart';
 import '../repositories/person_repository.dart';
 import '../repositories/vehicle_repository.dart';
@@ -18,7 +18,7 @@ class VehicleUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  void addNewVehicle(){
+  Future<void> addNewVehicle() async {
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till nytt fordon (Undvik å, ä, ö)\n");  
@@ -40,7 +40,7 @@ class VehicleUi {
       stdout.writeln("Alla personer i systemet:");
       stdout.writeln("\n-----------------------------------------------------------\n");
     
-      var persons = repoPerson.getAll();
+      var persons = await repoPerson.getAll();
       if (persons.isEmpty) {
         stdout.writeln("Inga personer finns i systemet.");
         return;
@@ -77,7 +77,7 @@ class VehicleUi {
 
       var choice = stdin.readLineSync()?.trim().toLowerCase() ?? "";
       if (choice == 'ja') {
-        repoVehicle.add(Vehicle(plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson));
+        await repoVehicle.add(Vehicle(plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson));
         stdout.write("Fordonet har lagts till.");
         sleep(Duration(seconds: 3));        
         return;
@@ -90,14 +90,14 @@ class VehicleUi {
     }  
 }
 
-void manageVehicle() {
+Future<void> manageVehicle() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nFordon");
     stdout.writeln("Alla fordon i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
-    var vehicles = repoVehicle.getAll();
+    var vehicles = await repoVehicle.getAll();
     if (vehicles.isEmpty) {
       stdout.writeln("Inga fordon finns i systemet.");
       sleep(Duration(seconds: 3));
@@ -155,7 +155,7 @@ void manageVehicle() {
         stdout.writeln("\nAlla personer i systemet:");
         stdout.writeln("\n-----------------------------------------------------------\n");
       
-        var persons = repoPerson.getAll();
+        var persons = await repoPerson.getAll();
         if (persons.isEmpty) {
           stdout.writeln("Det finns inga personer i systemet att välja som ägare. Lägg till en person först");
           sleep(Duration(seconds: 4));
@@ -190,7 +190,7 @@ void manageVehicle() {
         var choice = stdin.readLineSync()?.trim().toLowerCase() ?? "";
         if (choice == 'ja') {
           Vehicle newVehicle = Vehicle(plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson);
-          repoVehicle.update(selectedVehicle, newVehicle);
+          await repoVehicle.update(selectedVehicle, newVehicle);
           stdout.write("Fordon uppdaterad.");
           sleep(Duration(seconds: 3));        
           return; 
@@ -203,7 +203,7 @@ void manageVehicle() {
         }        
       }
     } else if (action == 'd') { // Lets user delete person 
-      repoVehicle.delete(selectedVehicle);
+      await repoVehicle.delete(selectedVehicle);
       stdout.write("Fordonet är borttagen.");
       sleep(Duration(seconds: 3)); 
     } else {

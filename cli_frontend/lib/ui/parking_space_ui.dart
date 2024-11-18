@@ -1,5 +1,5 @@
+import 'package:http/http.dart' as http;
 import 'dart:io';
-
 import '../models/parking_space.dart';
 import '../repositories/parking_space_repository.dart';
 import '../utils/console_utils.dart';
@@ -14,7 +14,7 @@ class ParkingSpaceUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  void addNewParkingSpace(){
+  Future<void> addNewParkingSpace() async{
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till ny parkeringsplats (Undvik å, ä, ö)\n");  
@@ -31,21 +31,21 @@ class ParkingSpaceUi {
         continue;
       }
       
-      repoParkingSpace.add(ParkingSpace(zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
+      await repoParkingSpace.add(ParkingSpace(zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
       stdout.write("Parkeringsplatsen har lagts till.");
       sleep(Duration(seconds: 3));    
       return;    
     }  
 }
 
-void manageParkingSpace() {
+Future<void> manageParkingSpace() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nParkeringsplatser");
     stdout.writeln("Alla platser i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
-    var parkingSpaces = repoParkingSpace.getAll();
+    var parkingSpaces = await repoParkingSpace.getAll();
     if (parkingSpaces.isEmpty) {
       stdout.writeln("Inga parkeringsplatser finns i systemet.");
       return;
@@ -97,13 +97,13 @@ void manageParkingSpace() {
         }
         
         ParkingSpace newParkingSpace = ParkingSpace(zone: zone, pricePerHour: pricePerHour);
-        repoParkingSpace.update(selectedPs, newParkingSpace);
+        await repoParkingSpace.update(selectedPs, newParkingSpace);
         stdout.write("Parkeringsplats uppdaterad.");
         sleep(Duration(seconds: 3));        
         return;
       }
     } else if (action == 'd') { // Lets user delete space 
-      repoParkingSpace.delete(selectedPs);
+      await repoParkingSpace.delete(selectedPs);
       stdout.write("Parkeringsplats är borttagen.");
       sleep(Duration(seconds: 3)); 
       return;
