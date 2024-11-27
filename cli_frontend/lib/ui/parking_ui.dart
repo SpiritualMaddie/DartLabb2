@@ -1,13 +1,17 @@
+import 'package:cli_frontend/repositories/parking_repository.dart';
+import 'package:cli_frontend/repositories/parking_space_repository.dart';
+import 'package:cli_frontend/repositories/vehicle_repository.dart';
+
+import 'package:cli_frontend/ui/parking_space_ui.dart';
+import 'package:cli_frontend/ui/vehicle_ui.dart';
+import 'package:cli_frontend/utils/console_utils.dart';
+import 'package:cli_frontend/utils/input_utils.dart';
+
+import 'package:shared/models/parking.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import '../models/parking.dart';
-import '../repositories/parking_repository.dart';
-import '../repositories/parking_space_repository.dart';
-import '../repositories/vehicle_repository.dart';
-import '../utils/console_utils.dart';
-import '../utils/input_utils.dart';
-import 'parking_space_ui.dart';
-import 'vehicle_ui.dart';
+
 
 class ParkingUi {
   static final ParkingUi _instance = ParkingUi._internal();
@@ -33,6 +37,7 @@ class ParkingUi {
       var vehicles = await repoVehicle.getAll();
       if (vehicles.isEmpty) {
         stdout.writeln("Inga fordon finns i systemet.");
+        await Future.delayed(Duration(seconds: 3));
         return;
       }
     
@@ -75,6 +80,7 @@ class ParkingUi {
         var parkingSpaces = await repoParkingSpace.getAll();
         if (parkingSpaces.isEmpty) {
           stdout.writeln("Inga parkeringsplatser finns i systemet.");
+          await Future.delayed(Duration(seconds: 3));
           return;
         }
       
@@ -111,9 +117,10 @@ class ParkingUi {
 
         if(psChoice == "ja"){
 
+          // HTTP REQUEST
           await repoParking.add(Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
           stdout.write("Parkeringen har lagts till.");
-          sleep(Duration(seconds: 3));        
+          await Future.delayed(Duration(seconds: 3));        
           return;
         }else if(psChoice == "nej"){
           continue;
@@ -138,9 +145,11 @@ Future<void> manageParking() async {
     stdout.writeln("Alla parkeringar i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
+    // HTTP REQUEST
     var parkings = await repoParking.getAll();
     if (parkings.isEmpty) {
       stdout.writeln("Inga parkeringar finns i systemet.");
+      await Future.delayed(Duration(seconds: 3));
       return;
     }
     
@@ -183,6 +192,7 @@ Future<void> manageParking() async {
         var vehicles = await repoVehicle.getAll();
         if (vehicles.isEmpty) {
           stdout.writeln("Inga fordon finns i systemet.");
+          await Future.delayed(Duration(seconds: 3));
           return;
         }
       
@@ -222,9 +232,11 @@ Future<void> manageParking() async {
           stdout.writeln("Alla parkeringsplatser i systemet:");
           stdout.writeln("\n-----------------------------------------------------------\n");
         
+          // HTTP REQUEST
           var parkingSpaces = await repoParkingSpace.getAll();
           if (parkingSpaces.isEmpty) {
             stdout.writeln("Inga parkeringsplatser finns i systemet.");
+            await Future.delayed(Duration(seconds: 3));
             return;
           }
         
@@ -267,10 +279,11 @@ Future<void> manageParking() async {
 
               if(changeTime == "ja"){
 
+                // HTTP REQUEST
                 Parking newParking = Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: DateTime.now());
                 await repoParking.update(selectedParking, newParking);
                 stdout.write("Parkeringen har lagts till.");
-                sleep(Duration(seconds: 3));
+                await Future.delayed(Duration(seconds: 3));
                 return;
 
               }else if(changeTime != "nej" && changeTime != "ja"){
@@ -278,10 +291,11 @@ Future<void> manageParking() async {
               }
             }
 
+            // HTTP REQUEST
             Parking newParking = Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: selectedParking.endTime);
             await repoParking.update(selectedParking, newParking);
             stdout.write("Parkeringen har lagts till.");
-            sleep(Duration(seconds: 3));        
+            await Future.delayed(Duration(seconds: 3));        
             return;
 
           }else if(psChoice == "nej"){
@@ -300,9 +314,11 @@ Future<void> manageParking() async {
         
       }
     } else if (action == 'd') { // Lets user delete parking 
+
+      // HTTP REQUEST
       await repoParking.delete(selectedParking);
       stdout.write("Parkeringen är borttagen.");
-      sleep(Duration(seconds: 3)); 
+      await Future.delayed(Duration(seconds: 3)); 
     } else {
       consoleUtils.invalidChoice();
       continue;
@@ -317,10 +333,12 @@ Future<void> endParking() async {
     stdout.writeln("Alla aktiva parkeringar i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
+    // HTTP REQUEST
     var parkings = await repoParking.getAll();
     var ongoingParkings = parkings.where((parking) => parking.endTime == null || parking.endTimeStatus == "pågående").toList();
     if (ongoingParkings.isEmpty) {
       stdout.writeln("Inga aktiva parkeringar finns i systemet.");
+      await Future.delayed(Duration(seconds: 3));
       return;
     }
     
@@ -356,10 +374,11 @@ Future<void> endParking() async {
     if (action == 'ja') {
       while (true) {
 
+        // HTTP REQUEST
         Parking newParking = Parking(vehicle: selectedParking.vehicle, parkingSpace: selectedParking.parkingSpace, startTime: selectedParking.startTime, endTime: DateTime.now());
         await repoParking.update(selectedParking, newParking);
         stdout.write("Parkeringen har avslutats.");
-        sleep(Duration(seconds: 3));    
+        await Future.delayed(Duration(seconds: 3));    
         return;
 
       }

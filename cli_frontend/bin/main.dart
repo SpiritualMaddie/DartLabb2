@@ -1,7 +1,7 @@
+import 'package:cli_frontend/data/dummy_data.dart';
 import '../lib/application.dart';
-import '../data/dummy_data.dart';
 
-void main(List<String> args) async{
+Future<void> main(List<String> args) async{
   Application startApp = Application();
   DummyData dummyData = DummyData();
 

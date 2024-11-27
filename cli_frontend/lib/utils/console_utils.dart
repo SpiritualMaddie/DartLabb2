@@ -26,7 +26,7 @@ class ConsoleUtils {
     clearConsole();
     stdout.write("Du valde att avsluta, programmet avslutar...");
     sleep(Duration(seconds: 2));
-    endLogo();
+    //endLogo();
     sleep(Duration(seconds: 2));
     exit(0);
   }

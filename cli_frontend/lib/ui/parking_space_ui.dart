@@ -1,9 +1,13 @@
+import 'package:cli_frontend/repositories/parking_space_repository.dart';
+
+import 'package:cli_frontend/utils/console_utils.dart';
+import 'package:cli_frontend/utils/input_utils.dart';
+
+import 'package:shared/models/parking_space.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import '../models/parking_space.dart';
-import '../repositories/parking_space_repository.dart';
-import '../utils/console_utils.dart';
-import '../utils/input_utils.dart';
+
 
 class ParkingSpaceUi {
   static final ParkingSpaceUi _instance = ParkingSpaceUi._internal();
@@ -31,9 +35,10 @@ class ParkingSpaceUi {
         continue;
       }
       
+      // HTTP REQUEST
       await repoParkingSpace.add(ParkingSpace(zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
       stdout.write("Parkeringsplatsen har lagts till.");
-      sleep(Duration(seconds: 3));    
+      await Future.delayed(Duration(seconds: 3));    
       return;    
     }  
 }
@@ -45,9 +50,20 @@ Future<void> manageParkingSpace() async {
     stdout.writeln("Alla platser i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
-    var parkingSpaces = await repoParkingSpace.getAll();
+    // HTTP REQUEST
+    var parkingSpaces;
+    try{
+
+      parkingSpaces = await repoParkingSpace.getAll();
+
+    }catch(error){
+      stdout.writeln("Unable to fetch due to error: ${error}");
+      await Future.delayed(Duration(seconds: 3));
+      return;
+    }
     if (parkingSpaces.isEmpty) {
       stdout.writeln("Inga parkeringsplatser finns i systemet.");
+      await Future.delayed(Duration(seconds: 3));
       return;
     }
     
@@ -96,16 +112,19 @@ Future<void> manageParkingSpace() async {
           continue;
         }
         
+        // HTTP REQUEST
         ParkingSpace newParkingSpace = ParkingSpace(zone: zone, pricePerHour: pricePerHour);
         await repoParkingSpace.update(selectedPs, newParkingSpace);
         stdout.write("Parkeringsplats uppdaterad.");
-        sleep(Duration(seconds: 3));        
+        await Future.delayed(Duration(seconds: 3));        
         return;
       }
     } else if (action == 'd') { // Lets user delete space 
+
+      // HTTP REQUEST
       await repoParkingSpace.delete(selectedPs);
       stdout.write("Parkeringsplats är borttagen.");
-      sleep(Duration(seconds: 3)); 
+      await Future.delayed(Duration(seconds: 3)); 
       return;
     } else {
       consoleUtils.invalidChoice();

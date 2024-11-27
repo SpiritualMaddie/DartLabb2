@@ -1,11 +1,16 @@
+import 'package:cli_frontend/repositories/person_repository.dart';
+import 'package:cli_frontend/repositories/vehicle_repository.dart';
+
+import 'package:cli_frontend/utils/console_utils.dart';
+import 'package:cli_frontend/utils/input_utils.dart';
+import 'package:cli_frontend/ui/person_ui.dart';
+
+import 'package:shared/models/vehicle.dart';
+
+
+
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import '../models/vehicle.dart';
-import '../repositories/person_repository.dart';
-import '../repositories/vehicle_repository.dart';
-import '../utils/console_utils.dart';
-import '../utils/input_utils.dart';
-import 'person_ui.dart';
 
 class VehicleUi {
   static final VehicleUi _instance = VehicleUi._internal();
@@ -43,6 +48,7 @@ class VehicleUi {
       var persons = await repoPerson.getAll();
       if (persons.isEmpty) {
         stdout.writeln("Inga personer finns i systemet.");
+        await Future.delayed(Duration(seconds: 3));
         return;
       }
     
@@ -77,9 +83,11 @@ class VehicleUi {
 
       var choice = stdin.readLineSync()?.trim().toLowerCase() ?? "";
       if (choice == 'ja') {
+
+        // HTTP REQUEST
         await repoVehicle.add(Vehicle(plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson));
         stdout.write("Fordonet har lagts till.");
-        sleep(Duration(seconds: 3));        
+        await Future.delayed(Duration(seconds: 3));        
         return;
       }else if(choice == "nej"){
         continue;
@@ -97,10 +105,11 @@ Future<void> manageVehicle() async {
     stdout.writeln("Alla fordon i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
+    // HTTP REQUEST
     var vehicles = await repoVehicle.getAll();
     if (vehicles.isEmpty) {
       stdout.writeln("Inga fordon finns i systemet.");
-      sleep(Duration(seconds: 3));
+      await Future.delayed(Duration(seconds: 3));
       return;
     }
     
@@ -122,7 +131,7 @@ Future<void> manageVehicle() async {
     var index = int.tryParse(input);
     if (index == null || index < 1 || index > vehicles.length) {
       stdout.writeln("Ogiltigt val. Försök igen.");
-      sleep(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 2));
       continue;
     }
     
@@ -155,10 +164,11 @@ Future<void> manageVehicle() async {
         stdout.writeln("\nAlla personer i systemet:");
         stdout.writeln("\n-----------------------------------------------------------\n");
       
+        // HTTP REQUEST
         var persons = await repoPerson.getAll();
         if (persons.isEmpty) {
           stdout.writeln("Det finns inga personer i systemet att välja som ägare. Lägg till en person först");
-          sleep(Duration(seconds: 4));
+          await Future.delayed(Duration(seconds: 4));
           return;
         }
       
@@ -179,7 +189,7 @@ Future<void> manageVehicle() async {
         var index = int.tryParse(input);
         if (index == null || index < 1 || index > persons.length) {
           stdout.writeln("Ogiltigt val. Försök igen.");
-          sleep(Duration(seconds: 2));
+          await Future.delayed(Duration(seconds: 2));
           continue;
         }
         
@@ -189,26 +199,30 @@ Future<void> manageVehicle() async {
 
         var choice = stdin.readLineSync()?.trim().toLowerCase() ?? "";
         if (choice == 'ja') {
+
+          // HTTP REQUEST
           Vehicle newVehicle = Vehicle(plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson);
           await repoVehicle.update(selectedVehicle, newVehicle);
           stdout.write("Fordon uppdaterad.");
-          sleep(Duration(seconds: 3));        
+          await Future.delayed(Duration(seconds: 3));        
           return; 
         }else if(choice == "nej"){
           continue;
         }else{
           stdout.writeln("Ogiltigt val.");
-          sleep(Duration(seconds: 2));
+          await Future.delayed(Duration(seconds: 2));
           continue;
         }        
       }
     } else if (action == 'd') { // Lets user delete person 
+
+      // HTTP REQUEST
       await repoVehicle.delete(selectedVehicle);
       stdout.write("Fordonet är borttagen.");
-      sleep(Duration(seconds: 3)); 
+      await Future.delayed(Duration(seconds: 3)); 
     } else {
       stdout.writeln("Ogiltigt val.");
-      sleep(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 2));
       continue;
     }
   }

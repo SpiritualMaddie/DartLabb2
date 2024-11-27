@@ -1,7 +1,5 @@
-name: cli_frontend
+name: shared
 environment:
   sdk: '>=3.5.0 <4.0.0'
 dependencies:
-  shared:
-    path: ../shared
   http: ^1.2.2

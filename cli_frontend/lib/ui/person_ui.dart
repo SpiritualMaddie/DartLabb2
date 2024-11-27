@@ -1,9 +1,12 @@
+import 'package:cli_frontend/repositories/person_repository.dart';
+import 'package:cli_frontend/utils/console_utils.dart';
+import 'package:cli_frontend/utils/input_utils.dart';
+
+import 'package:shared/models/person.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import '../models/person.dart';
-import '../repositories/person_repository.dart';
-import '../utils/console_utils.dart';
-import '../utils/input_utils.dart';
+
 
 class PersonUi {
   static final PersonUi _instance = PersonUi._internal();
@@ -40,9 +43,10 @@ class PersonUi {
         continue;
       }
       
+      // HTTP REQUEST
       await repoPerson.add(Person(ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName)));
       stdout.write("Personen har lagts till.");
-      sleep(Duration(seconds: 3));        
+      await Future.delayed(Duration(seconds: 3));        
       return;
     }  
 }
@@ -54,9 +58,11 @@ Future<void> managePerson() async {
     stdout.writeln("Alla personer i systemet:");
     stdout.writeln("\n-----------------------------------------------------------\n");
     
+    // HTTP REQUEST
     var persons = await repoPerson.getAll();
     if (persons.isEmpty) {
       stdout.writeln("Inga personer finns i systemet.");
+      await Future.delayed(Duration(seconds: 3));
       return;
     }
     
@@ -113,16 +119,19 @@ Future<void> managePerson() async {
           continue;
         }
         
+        // HTTP REQUEST
         Person newPerson = Person(ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName));
         await repoPerson.update(selectedPerson, newPerson);
         stdout.write("Person uppdaterad.");
-        sleep(Duration(seconds: 3));        
+        await Future.delayed(Duration(seconds: 3));        
         return;
       }
     } else if (action == 'd') { // Lets user delete person 
+
+      // HTTP REQUEST
       await repoPerson.delete(selectedPerson);
       stdout.write("Person är borttagen.");
-      sleep(Duration(seconds: 3)); 
+      await Future.delayed(Duration(seconds: 3)); 
     } else {
       consoleUtils.invalidChoice();
       continue;
