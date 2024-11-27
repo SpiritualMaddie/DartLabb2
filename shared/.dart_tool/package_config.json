@@ -38,12 +38,6 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "shared",
-      "rootUri": "../../shared",
-      "packageUri": "lib/",
-      "languageVersion": "3.5"
-    },
-    {
       "name": "source_span",
       "rootUri": "file:///C:/Users/Owner/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0",
       "packageUri": "lib/",
@@ -74,13 +68,13 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "cli_frontend",
+      "name": "shared",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2024-11-27T15:27:50.950049Z",
+  "generated": "2024-11-27T15:26:21.065365Z",
   "generator": "pub",
   "generatorVersion": "3.5.3",
   "flutterRoot": "file:///C:/Users/Owner/flutter",

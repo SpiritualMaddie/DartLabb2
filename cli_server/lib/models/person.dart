@@ -16,9 +16,19 @@ Namn: $firstName $lastName
 -----------------------------------------------------------""";
   }
 
+  // Serialization
   Map<String, dynamic> toJson() => {
   'ssn' : ssn,
   'firstname' : firstName,
   'lastname' : lastName
   };
+
+  // Deserialization
+  factory Person.fromJson(Map<String, dynamic> json){
+    return Person(
+      ssn: json['ssn'],
+      firstName: json['firstName'],
+      lastName: json['lastName']
+      );
+  }
 }

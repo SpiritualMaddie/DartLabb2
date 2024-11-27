@@ -1,15 +1,18 @@
 import 'dart:io';
-import 'repositories/vehicle_repository.dart';
-import 'ui/Menu.dart';
 
-import 'repositories/parking_repository.dart';
-import 'repositories/parking_space_repository.dart';
-import 'repositories/person_repository.dart';
-import 'ui/parking_space_ui.dart';
-import 'ui/parking_ui.dart';
-import 'ui/person_ui.dart';
-import 'ui/vehicle_ui.dart';
-import 'utils/console_utils.dart';
+import 'package:cli_frontend/repositories/parking_repository.dart';
+import 'package:cli_frontend/repositories/parking_space_repository.dart';
+import 'package:cli_frontend/repositories/person_repository.dart';
+import 'package:cli_frontend/repositories/vehicle_repository.dart';
+
+import 'package:cli_frontend/ui/menu.dart';
+import 'package:cli_frontend/ui/person_ui.dart';
+import 'package:cli_frontend/ui/vehicle_ui.dart';
+import 'package:cli_frontend/ui/parking_ui.dart';
+import 'package:cli_frontend/ui/parking_space_ui.dart';
+import 'package:cli_frontend/utils/console_utils.dart';
+
+
 
 
 class Application{
@@ -29,7 +32,7 @@ class Application{
 
 
 // ************************* START MENU ***********************************************
-void startMenu(){
+Future<void> startMenu() async{
 
   while (true) {
     consoleUtils.clearConsole();
@@ -47,38 +50,45 @@ void startMenu(){
     consoleUtils.logo();
     print(mainMenu);
 
-    var input = stdin.readLineSync();
-    consoleUtils.clearConsole();
+    try{
 
-    switch (input) {
-      case "1":
-        parkingUi.addNewParking();    
-        break;
-      case "2":
-        parkingUi.endParking();    
-        break;
-      case "3":
-        parkingsMenu();      
-        break;
-      case "4":
-        personMenu();        
-        break;
-      case "5":
-        vehicleMenu();       
-        break;
-      case "6":
-        parkingSpacesMenu();
-        break;
-      case "7":
-        consoleUtils.endScreen();
-      default:
-        consoleUtils.invalidChoice();
+      var input = stdin.readLineSync();
+      consoleUtils.clearConsole();
+
+      switch (input) {
+        case "1":
+          await parkingUi.addNewParking();    
+          break;
+        case "2":
+          await parkingUi.endParking();    
+          break;
+        case "3":
+          await parkingsMenu();      
+          break;
+        case "4":
+          await personMenu();        
+          break;
+        case "5":
+          await vehicleMenu();       
+          break;
+        case "6":
+          await parkingSpacesMenu();
+          break;
+        case "7":
+          consoleUtils.endScreen();
+        default:
+          consoleUtils.invalidChoice();
+      }
+    }catch(error){
+      stdout.writeln("Unable to fetch due to error: ${error}");
+      await Future.delayed(Duration(seconds: 3));
+      return;
     }
   }
 }
 
 // ************************* PERSON MENU **********************************************
-void personMenu(){
+Future<void> personMenu() async{
 
   while (true) {
     consoleUtils.clearConsole();
@@ -92,29 +102,36 @@ void personMenu(){
 
     print(mainMenu);
 
-    var input = stdin.readLineSync();
-    consoleUtils.clearConsole();
+    try{
 
-    switch (input) {
-      case "1":
-        personUi.addNewPerson();
-        break;
-      case "2":
-        personUi.managePerson();
-        break;
-      case "3":
-        startMenu();        
-        break;
-      case "4":
-        consoleUtils.endScreen();
-      default:
-        consoleUtils.invalidChoice();
+      var input = stdin.readLineSync();
+      consoleUtils.clearConsole();
+
+      switch (input) {
+        case "1":
+          await personUi.addNewPerson();
+          break;
+        case "2":
+          await personUi.managePerson();
+          break;
+        case "3":
+          await startMenu();        
+          break;
+        case "4":
+          consoleUtils.endScreen();
+        default:
+          consoleUtils.invalidChoice();
+      }
+    }catch(error){
+      stdout.writeln("Unable to fetch due to error: ${error}");
+      await Future.delayed(Duration(seconds: 3));
+      return;
     }
   }
 }
 
 // ************************* VEHICLE MENU *********************************************
-void vehicleMenu(){
+Future<void> vehicleMenu() async{
   consoleUtils.clearConsole();
   String prompt = "Här kan du hantera fordon\n";
 
@@ -126,28 +143,35 @@ void vehicleMenu(){
 
   print(mainMenu);
 
-  var input = stdin.readLineSync();
-  consoleUtils.clearConsole();
+  try{
 
-  switch (input) {
-    case "1":
-      vehicleUi.addNewVehicle();      
-      break;
-    case "2":
-      vehicleUi.manageVehicle();       
-      break;
-    case "3":
-      startMenu();        
-      break;
-    case "4":
-      consoleUtils.endScreen();
-    default:
-      consoleUtils.invalidChoice();
+    var input = stdin.readLineSync();
+    consoleUtils.clearConsole();
+
+    switch (input) {
+      case "1":
+        await vehicleUi.addNewVehicle();      
+        break;
+      case "2":
+        await vehicleUi.manageVehicle();       
+        break;
+      case "3":
+        await startMenu();        
+        break;
+      case "4":
+        consoleUtils.endScreen();
+      default:
+        consoleUtils.invalidChoice();
+    }
+  }catch(error){
+    stdout.writeln("Unable to fetch due to error: ${error}");
+    await Future.delayed(Duration(seconds: 3));
+    return;
   }
 }
 
 // ************************* PARKINGS MENU ********************************************
-void parkingsMenu(){
+Future<void> parkingsMenu() async{
   consoleUtils.clearConsole();
   String prompt = "Här kan du hantera parkeringar\n";
 
@@ -159,28 +183,35 @@ void parkingsMenu(){
 
   print(mainMenu);
 
-  var input = stdin.readLineSync();
-  consoleUtils.clearConsole();
+  try{
 
-  switch (input) {
-    case "1":
-      parkingUi.addNewParking();      
-      break;
-    case "2":
-      parkingUi.manageParking();       
-      break;
-    case "3":
-      startMenu();        
-      break;
-    case "4":
-      consoleUtils.endScreen();
-    default:
-      consoleUtils.invalidChoice();
+    var input = stdin.readLineSync();
+    consoleUtils.clearConsole();
+
+    switch (input) {
+      case "1":
+        await parkingUi.addNewParking();      
+        break;
+      case "2":
+        await parkingUi.manageParking();       
+        break;
+      case "3":
+        await startMenu();        
+        break;
+      case "4":
+        consoleUtils.endScreen();
+      default:
+        consoleUtils.invalidChoice();
+    }
+  }catch(error){
+    stdout.writeln("Unable to fetch due to error: ${error}");
+    await Future.delayed(Duration(seconds: 3));
+    return;
   }
 }
 
 // ************************* PARKINGSPACES MENU ***************************************
-void parkingSpacesMenu(){
+Future<void> parkingSpacesMenu() async{
   consoleUtils.clearConsole();
   String prompt = "Här kan du hantera parkerinsplatser\n";
 
@@ -192,23 +223,30 @@ void parkingSpacesMenu(){
 
   print(mainMenu);
 
-  var input = stdin.readLineSync();
-  consoleUtils.clearConsole();
+  try{
 
-  switch (input) {
-    case "1":
-      parkingSpaceUi.addNewParkingSpace();      
-      break;
-    case "2":
-      parkingSpaceUi.manageParkingSpace();       
-      break;
-    case "3":
-      startMenu();        
-      break;
-    case "4":
-      consoleUtils.endScreen();
-    default:
-      consoleUtils.invalidChoice();
+    var input = stdin.readLineSync();
+    consoleUtils.clearConsole();
+
+    switch (input) {
+      case "1":
+        await parkingSpaceUi.addNewParkingSpace();      
+        break;
+      case "2":
+        await parkingSpaceUi.manageParkingSpace();       
+        break;
+      case "3":
+        await startMenu();        
+        break;
+      case "4":
+        consoleUtils.endScreen();
+      default:
+        consoleUtils.invalidChoice();
+    }
+  }catch(error){
+    stdout.writeln("Unable to fetch due to error: ${error}");
+    await Future.delayed(Duration(seconds: 3));
+    return;
   }
 }
 

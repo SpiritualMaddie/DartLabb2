@@ -50,9 +50,9 @@ class Parking {
     },
     'parkingSpace' : {
       'zone' : parkingSpace.zone,
-      'pricePerHour' : parkingSpace.pricePerHour
+      'pricePerHour' : parkingSpace.pricePerHour.toString()
     },
-    'startTime' : startTime,
-    'endTime' : endTime
+    'startTime' : startTime.toIso8601String(),
+    'endTime' : endTime?.toIso8601String()
   };
 }

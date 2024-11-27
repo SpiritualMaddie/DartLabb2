@@ -1,11 +1,16 @@
-import '../lib/repositories/vehicle_repository.dart';
-import '../lib/models/vehicle.dart';
-import '../lib/models/parking.dart';
-import '../lib/models/parking_space.dart';
-import '../lib/models/person.dart';
-import '../lib/repositories/parking_repository.dart';
-import '../lib/repositories/parking_space_repository.dart';
-import '../lib/repositories/person_repository.dart';
+// import 'package:cli_server/repositories/parking_repository.dart';
+// import 'package:cli_server/repositories/parking_space_repository.dart';
+// import 'package:cli_server/repositories/person_repository.dart';
+// import 'package:cli_server/repositories/vehicle_repository.dart';
+
+import 'package:cli_frontend/repositories/parking_repository.dart';
+import 'package:cli_frontend/repositories/parking_space_repository.dart';
+import 'package:cli_frontend/repositories/person_repository.dart';
+import 'package:cli_frontend/repositories/vehicle_repository.dart';
+import 'package:shared/models/vehicle.dart';
+import 'package:shared/models/parking.dart';
+import 'package:shared/models/parking_space.dart';
+import 'package:shared/models/person.dart';
 
 class DummyData{
 
