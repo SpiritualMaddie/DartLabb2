@@ -34,9 +34,15 @@ class ParkingSpaceUi {
         consoleUtils.invalidChoice();
         continue;
       }
+
+      int? parkingSpaceId = inputUtils.getValidIntPrice("Parkingsplatsid (heltal tresiffrigt, börjar med 3 (tex 311)):");
+      if(parkingSpaceId == null){
+        consoleUtils.invalidChoice();
+        continue;
+      }
       
       // HTTP REQUEST
-      await repoParkingSpace.add(ParkingSpace(zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
+      await repoParkingSpace.add(ParkingSpace(parkingSpaceId: parkingSpaceId, zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
       stdout.write("Parkeringsplatsen har lagts till.");
       await Future.delayed(Duration(seconds: 3));    
       return;    
@@ -89,7 +95,7 @@ Future<void> manageParkingSpace() async {
     }
     
     consoleUtils.clearConsole();
-    var selectedPs = parkingSpaces[index - 1];
+    ParkingSpace selectedPs = parkingSpaces[index - 1];
     stdout.writeln("Du har valt:\n ${selectedPs}");
     stdout.write("Vill du redigera (e) eller ta bort (d) denna plats? ");
     
@@ -112,8 +118,14 @@ Future<void> manageParkingSpace() async {
           continue;
         }
         
+        // int? parkingSpaceId = inputUtils.getValidIntPrice("Parkingsplatsid (heltal tresiffrigt, börjar med 3 (tex 311)) \n använd samma som sist:");
+        // if(parkingSpaceId == null){
+        //   consoleUtils.invalidChoice();
+        //   continue;
+        // }
+
         // HTTP REQUEST
-        ParkingSpace newParkingSpace = ParkingSpace(zone: zone, pricePerHour: pricePerHour);
+        ParkingSpace newParkingSpace = ParkingSpace(parkingSpaceId: selectedPs.parkingSpaceId, zone: zone, pricePerHour: pricePerHour);
         await repoParkingSpace.update(selectedPs, newParkingSpace);
         stdout.write("Parkeringsplats uppdaterad.");
         await Future.delayed(Duration(seconds: 3));        

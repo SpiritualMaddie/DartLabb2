@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cli_frontend/repositories/person_repository.dart';
 import 'package:cli_frontend/utils/console_utils.dart';
 import 'package:cli_frontend/utils/input_utils.dart';
@@ -12,6 +14,7 @@ class PersonUi {
   static final PersonUi _instance = PersonUi._internal();
   PersonUi._internal();
   factory PersonUi() => _instance;
+
 
   var repoPerson = PersonRepository();
   var inputUtils = InputUtils();
@@ -42,9 +45,15 @@ class PersonUi {
         consoleUtils.invalidChoice();
         continue;
       }
+
+      int? personId = inputUtils.getValidIntPrice("Personid (heltal tresiffrigt, börjar med 1 (tex 111)):");
+      if(personId == null){
+        consoleUtils.invalidChoice();
+        continue;
+      }
       
       // HTTP REQUEST
-      await repoPerson.add(Person(ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName)));
+      await repoPerson.add(Person(personId: personId, ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName)));
       stdout.write("Personen har lagts till.");
       await Future.delayed(Duration(seconds: 3));        
       return;
@@ -59,7 +68,10 @@ Future<void> managePerson() async {
     stdout.writeln("\n-----------------------------------------------------------\n");
     
     // HTTP REQUEST
+
     var persons = await repoPerson.getAll();
+    // Error handling to read errors
+    stdin.readLineSync();
     if (persons.isEmpty) {
       stdout.writeln("Inga personer finns i systemet.");
       await Future.delayed(Duration(seconds: 3));
@@ -118,9 +130,15 @@ Future<void> managePerson() async {
           consoleUtils.invalidChoice();
           continue;
         }
+
+        // int? personId = inputUtils.getValidIntPrice("Personid (heltal tresiffrigt, börjar med 1 (tex 111)) \n använd samma som sist:");
+        // if(personId == null){
+        //   consoleUtils.invalidChoice();
+        //   continue;
+        // }
         
         // HTTP REQUEST
-        Person newPerson = Person(ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName));
+        Person newPerson = Person(personId: selectedPerson.personId, ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName));
         await repoPerson.update(selectedPerson, newPerson);
         stdout.write("Person uppdaterad.");
         await Future.delayed(Duration(seconds: 3));        

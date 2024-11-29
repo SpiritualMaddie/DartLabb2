@@ -1,5 +1,3 @@
-
-
 import 'package:shared/models/person.dart';
 import 'repository.dart';
 
@@ -10,6 +8,5 @@ class PersonRepository extends Repository<Person>{
   PersonRepository._internal();
 
   factory PersonRepository() => _instance;
-
 
   }

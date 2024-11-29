@@ -1,15 +1,16 @@
-import 'parking_space.dart';
-import 'vehicle.dart';
+import 'package:shared/models/parking_space.dart';
+import 'package:shared/models/vehicle.dart';
 
 class Parking {
-  //int parkingId;
+  int parkingId;
   Vehicle vehicle;
   ParkingSpace parkingSpace;
   DateTime startTime;
   DateTime? endTime;
 
   Parking(
-      {required this.vehicle,
+      { required this.parkingId,
+      required this.vehicle,
       required this.parkingSpace,
       required this.startTime,
       this.endTime});
@@ -35,24 +36,31 @@ class Parking {
     Zone: ${parkingSpace.zone}
     Starttid: $formattedStartTime
     Sluttid:  $formattedEndTime
+    Parkingsid: $parkingId
 -----------------------------------------------------------""";
   }
 
+  // Serialization
   Map<String, dynamic> toJson() => {
-    'vehicle' : {
-      'plateNumber' : vehicle.plateNumber,
-      'vehicleType' : vehicle.vehicleType,
-      'owner' : {
-        'ssn' : vehicle.owner.ssn,
-        'firstname' : vehicle.owner.firstName,
-        'lastname' : vehicle.owner.lastName
-      }
-    },
-    'parkingSpace' : {
-      'zone' : parkingSpace.zone,
-      'pricePerHour' : parkingSpace.pricePerHour.toString()
-    },
+    'parkingId' : parkingId,
+    'vehicle' : vehicle.toJson(),
+    'parkingSpace' : parkingSpace.toJson(),
     'startTime' : startTime.toIso8601String(),
     'endTime' : endTime?.toIso8601String()
   };
+
+  // Deserialization
+  factory Parking.fromJson(Map<String, dynamic> json){
+
+    if(json['parkingId'] == null || json['vehicle'] == null || json['parkingSpace'] == null || json['startTime'] == null){
+      throw FormatException('Missing required fields: parkingId, vehicle, parkingSpace or startTime');
+    }
+    return Parking(
+      parkingId: json['parkingId'],
+      vehicle: Vehicle.fromJson(json['vehicle']),
+      parkingSpace: ParkingSpace.fromJson(json['parkingSpace']),
+      startTime: DateTime.parse(json['startTime']),
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null
+      );
+  }
 }

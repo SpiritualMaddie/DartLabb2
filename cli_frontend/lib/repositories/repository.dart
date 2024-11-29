@@ -3,19 +3,12 @@
 
 // import 'package:http/http.dart' as http;
 
-import 'dart:io';
+//import 'dart:io';
 
 abstract class Repository<T> {
 	List<T> _items = [];
 
 	Future<void> add(T item) async => _items.add(item);
-
-//   Future<List<T>> getAll() async {
-//   print("Current items in repository: $_items");
-//   sleep(Duration(seconds: 5));
-//   //await Future.delayed(Duration(seconds: 3));
-//   return _items;
-// }
 
 	Future<List<T>> getAll() async => _items;
 
@@ -51,3 +44,9 @@ abstract class Repository<T> {
   //   var item = _items.indexWhere((i) => i.id == id);
   //   return item;
   // }
+//   Future<List<T>> getAll() async {
+//   print("Current items in repository: $_items");
+//   sleep(Duration(seconds: 5));
+//   //await Future.delayed(Duration(seconds: 3));
+//   return _items;
+// }

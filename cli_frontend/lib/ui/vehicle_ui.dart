@@ -7,8 +7,6 @@ import 'package:cli_frontend/ui/person_ui.dart';
 
 import 'package:shared/models/vehicle.dart';
 
-
-
 import 'package:http/http.dart' as http;
 import 'dart:io';
 
@@ -40,7 +38,13 @@ class VehicleUi {
         consoleUtils.invalidChoice();
         continue;
       }
-        
+
+      int? vehicleId = inputUtils.getValidIntPrice("Fordonsid (heltal tresiffrigt, börjar med 2 (tex 211)):");
+      if(vehicleId == null){
+        consoleUtils.invalidChoice();
+        continue;
+      }
+           
         // Person owner
       stdout.writeln("Alla personer i systemet:");
       stdout.writeln("\n-----------------------------------------------------------\n");
@@ -85,7 +89,7 @@ class VehicleUi {
       if (choice == 'ja') {
 
         // HTTP REQUEST
-        await repoVehicle.add(Vehicle(plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson));
+        await repoVehicle.add(Vehicle(vehicleId: vehicleId, plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson));
         stdout.write("Fordonet har lagts till.");
         await Future.delayed(Duration(seconds: 3));        
         return;
@@ -160,6 +164,12 @@ Future<void> manageVehicle() async {
           stdout.write("Du måste fylla i något");
           continue;
         }
+
+      // int? vehicleId = inputUtils.getValidIntPrice("Fordonsid (heltal tresiffrigt, börjar med 2 (tex 211))  \n använd samma som sist:");
+      // if(vehicleId == null){
+      //   consoleUtils.invalidChoice();
+      //   continue;
+      // }
           
         stdout.writeln("\nAlla personer i systemet:");
         stdout.writeln("\n-----------------------------------------------------------\n");
@@ -201,7 +211,7 @@ Future<void> manageVehicle() async {
         if (choice == 'ja') {
 
           // HTTP REQUEST
-          Vehicle newVehicle = Vehicle(plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson);
+          Vehicle newVehicle = Vehicle(vehicleId: selectedVehicle.vehicleId, plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson);
           await repoVehicle.update(selectedVehicle, newVehicle);
           stdout.write("Fordon uppdaterad.");
           await Future.delayed(Duration(seconds: 3));        
