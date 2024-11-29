@@ -1,9 +1,15 @@
 import 'dart:io';
+import 'package:cli_server/data/dummy_data.dart';
 import 'package:cli_server/routes/routes.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 
 void main(List<String> args) async {
+
+  // Running seed data
+  DummyData dummyData = DummyData();
+  dummyData.populateDb();
+
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
 

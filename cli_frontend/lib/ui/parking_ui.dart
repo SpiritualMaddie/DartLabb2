@@ -117,8 +117,14 @@ class ParkingUi {
 
         if(psChoice == "ja"){
 
+        int? parkingId = inputUtils.getValidIntPrice("Parkingsid (heltal tresiffrigt, börjar med 4 (tex 406))");
+        if(parkingId == null){
+          consoleUtils.invalidChoice();
+          continue;
+        }
+
           // HTTP REQUEST
-          await repoParking.add(Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
+          await repoParking.add(Parking(parkingId: parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
           stdout.write("Parkeringen har lagts till.");
           await Future.delayed(Duration(seconds: 3));        
           return;
@@ -280,7 +286,7 @@ Future<void> manageParking() async {
               if(changeTime == "ja"){
 
                 // HTTP REQUEST
-                Parking newParking = Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: DateTime.now());
+                Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: DateTime.now());
                 await repoParking.update(selectedParking, newParking);
                 stdout.write("Parkeringen har lagts till.");
                 await Future.delayed(Duration(seconds: 3));
@@ -292,7 +298,7 @@ Future<void> manageParking() async {
             }
 
             // HTTP REQUEST
-            Parking newParking = Parking(vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: selectedParking.endTime);
+            Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: selectedParking.endTime);
             await repoParking.update(selectedParking, newParking);
             stdout.write("Parkeringen har lagts till.");
             await Future.delayed(Duration(seconds: 3));        
@@ -375,7 +381,7 @@ Future<void> endParking() async {
       while (true) {
 
         // HTTP REQUEST
-        Parking newParking = Parking(vehicle: selectedParking.vehicle, parkingSpace: selectedParking.parkingSpace, startTime: selectedParking.startTime, endTime: DateTime.now());
+        Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedParking.vehicle, parkingSpace: selectedParking.parkingSpace, startTime: selectedParking.startTime, endTime: DateTime.now());
         await repoParking.update(selectedParking, newParking);
         stdout.write("Parkeringen har avslutats.");
         await Future.delayed(Duration(seconds: 3));    

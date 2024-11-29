@@ -11,15 +11,15 @@ var personHandlers = PersonHandlers();
 // var parkingSpaceHandlers = ParkingSpaceHandlers();
 // var parkingHandlers = ParkingHandlers();
 final router = Router()
-
-  ..get('/', personHandlers.rootHandler)
   
+  ..get('/', personHandlers.rootHandler)
+
   // Person Routes
   ..get('/persons', personHandlers.getAllPersonsHandler)
   ..post('/persons', personHandlers.createPersonHandler)
-  ..get('/persons/<id>', personHandlers.getPersonByIdHandler)
-  ..put('/persons/<id>', personHandlers.updatePersonHandler)
-  ..delete('/persons/<id>', personHandlers.deletePersonHandler)
+  // ..get('/getpersonbyid/<id>', personHandlers.getPersonByIdHandler)
+  // ..put('/updateperson/<id>', personHandlers.updatePersonHandler)
+  // ..delete('/deleteperson/<id>', personHandlers.deletePersonHandler)
 
   // Vehicle Routes
   ..get('/vehicles', getAllVehiclesHandler)
