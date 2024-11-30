@@ -20,7 +20,7 @@ class PersonUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  Future<void> addNewPerson() async {
+  Future<void> createNewPerson() async {
 
     while (true) {
       consoleUtils.clearConsole();
@@ -60,7 +60,7 @@ class PersonUi {
     }  
 }
 
-Future<void> managePerson() async {
+  Future<void> managePerson() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nPersoner");

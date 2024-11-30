@@ -26,7 +26,7 @@ class ParkingUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  Future<void> addNewParking() async{
+  Future<void> createNewParking() async{
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till en ny parkering\n");  
@@ -55,7 +55,7 @@ class ParkingUi {
         return;
       }
       if (vehicleChoice == 'f') {
-        vehicleUi.addNewVehicle();
+        vehicleUi.createNewVehicle();
       }
       
       // Check if vehicle exists
@@ -98,7 +98,7 @@ class ParkingUi {
           return;
         }
         if (psInput == 'p') {
-          parkingSpaceUi.addNewParkingSpace();
+          parkingSpaceUi.createNewParkingSpace();
         }
         
         // Check if space exists
@@ -216,7 +216,7 @@ Future<void> manageParking() async {
           return;
         }
         if (vehicleChoice == 'f') {
-          vehicleUi.addNewVehicle();
+          vehicleUi.createNewVehicle();
         }
         
         // Check if vehicle exists
@@ -260,7 +260,7 @@ Future<void> manageParking() async {
             return;
           }
           if (psInput == 'p') {
-            parkingSpaceUi.addNewParkingSpace();
+            parkingSpaceUi.createNewParkingSpace();
           }
           
           // Check if space exists
@@ -332,7 +332,7 @@ Future<void> manageParking() async {
   }
 }
 
-Future<void> endParking() async {
+  Future<void> endParking() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nParkeringar");

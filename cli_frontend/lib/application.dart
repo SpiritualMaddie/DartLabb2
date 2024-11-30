@@ -57,7 +57,7 @@ Future<void> startMenu() async{
 
       switch (input) {
         case "1":
-          await parkingUi.addNewParking();    
+          await parkingUi.createNewParking();    
           break;
         case "2":
           await parkingUi.endParking();    
@@ -109,7 +109,7 @@ Future<void> personMenu() async{
 
       switch (input) {
         case "1":
-          await personUi.addNewPerson();
+          await personUi.createNewPerson();
           break;
         case "2":
           await personUi.managePerson();
@@ -150,7 +150,7 @@ Future<void> vehicleMenu() async{
 
     switch (input) {
       case "1":
-        await vehicleUi.addNewVehicle();      
+        await vehicleUi.createNewVehicle();      
         break;
       case "2":
         await vehicleUi.manageVehicle();       
@@ -190,7 +190,7 @@ Future<void> parkingsMenu() async{
 
     switch (input) {
       case "1":
-        await parkingUi.addNewParking();      
+        await parkingUi.createNewParking();      
         break;
       case "2":
         await parkingUi.manageParking();       
@@ -230,7 +230,7 @@ Future<void> parkingSpacesMenu() async{
 
     switch (input) {
       case "1":
-        await parkingSpaceUi.addNewParkingSpace();      
+        await parkingSpaceUi.createNewParkingSpace();      
         break;
       case "2":
         await parkingSpaceUi.manageParkingSpace();       

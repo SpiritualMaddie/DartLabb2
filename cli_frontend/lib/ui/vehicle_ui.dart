@@ -21,7 +21,7 @@ class VehicleUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  Future<void> addNewVehicle() async {
+  Future<void> createNewVehicle() async {
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till nytt fordon (Undvik å, ä, ö)\n");  
@@ -70,7 +70,7 @@ class VehicleUi {
         return;
       }
       if (input == 'p') {
-        personUi.addNewPerson();
+        personUi.createNewPerson();
       }
       
       // Check if person exists
@@ -102,7 +102,7 @@ class VehicleUi {
     }  
 }
 
-Future<void> manageVehicle() async {
+  Future<void> manageVehicle() async {
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nFordon");

@@ -18,7 +18,7 @@ class ParkingSpaceUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  Future<void> addNewParkingSpace() async{
+  Future<void> createNewParkingSpace() async{
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till ny parkeringsplats (Undvik å, ä, ö)\n");  
