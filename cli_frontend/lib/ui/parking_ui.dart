@@ -124,7 +124,7 @@ class ParkingUi {
         }
 
           // HTTP REQUEST
-          await repoParking.add(Parking(parkingId: parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
+          await repoParking.create(Parking(parkingId: parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
           stdout.write("Parkeringen har lagts till.");
           await Future.delayed(Duration(seconds: 3));        
           return;
@@ -287,7 +287,7 @@ Future<void> manageParking() async {
 
                 // HTTP REQUEST
                 Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: DateTime.now());
-                await repoParking.update(selectedParking, newParking);
+                await repoParking.update(selectedParking.parkingId, newParking);
                 stdout.write("Parkeringen har lagts till.");
                 await Future.delayed(Duration(seconds: 3));
                 return;
@@ -299,7 +299,7 @@ Future<void> manageParking() async {
 
             // HTTP REQUEST
             Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: selectedParking.endTime);
-            await repoParking.update(selectedParking, newParking);
+            await repoParking.update(selectedParking.parkingId, newParking);
             stdout.write("Parkeringen har lagts till.");
             await Future.delayed(Duration(seconds: 3));        
             return;
@@ -322,7 +322,7 @@ Future<void> manageParking() async {
     } else if (action == 'd') { // Lets user delete parking 
 
       // HTTP REQUEST
-      await repoParking.delete(selectedParking);
+      await repoParking.delete(selectedParking.parkingId);
       stdout.write("Parkeringen är borttagen.");
       await Future.delayed(Duration(seconds: 3)); 
     } else {
@@ -382,7 +382,7 @@ Future<void> endParking() async {
 
         // HTTP REQUEST
         Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedParking.vehicle, parkingSpace: selectedParking.parkingSpace, startTime: selectedParking.startTime, endTime: DateTime.now());
-        await repoParking.update(selectedParking, newParking);
+        await repoParking.update(selectedParking.parkingId, newParking);
         stdout.write("Parkeringen har avslutats.");
         await Future.delayed(Duration(seconds: 3));    
         return;

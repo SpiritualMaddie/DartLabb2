@@ -53,7 +53,7 @@ class PersonUi {
       }
       
       // HTTP REQUEST
-      await repoPerson.add(Person(personId: personId, ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName)));
+      await repoPerson.create(Person(personId: personId, ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName)));
       stdout.write("Personen har lagts till.");
       await Future.delayed(Duration(seconds: 3));        
       return;
@@ -139,7 +139,7 @@ Future<void> managePerson() async {
         
         // HTTP REQUEST
         Person newPerson = Person(personId: selectedPerson.personId, ssn: ssn, firstName: inputUtils.capitalizeWord(firstName), lastName: inputUtils.capitalizeWord(lastName));
-        await repoPerson.update(selectedPerson, newPerson);
+        await repoPerson.update(selectedPerson.personId, newPerson);
         stdout.write("Person uppdaterad.");
         await Future.delayed(Duration(seconds: 3));        
         return;
@@ -147,7 +147,7 @@ Future<void> managePerson() async {
     } else if (action == 'd') { // Lets user delete person 
 
       // HTTP REQUEST
-      await repoPerson.delete(selectedPerson);
+      await repoPerson.delete(selectedPerson.personId);
       stdout.write("Person är borttagen.");
       await Future.delayed(Duration(seconds: 3)); 
     } else {

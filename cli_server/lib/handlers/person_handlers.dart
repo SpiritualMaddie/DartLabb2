@@ -39,7 +39,7 @@ class PersonHandlers {
       final person = Person.fromJson(jsonDecode(data));
 
       // Add the person to the list
-      await repoPerson.add(person);
+      await repoPerson.create(person);
 
       // Return the created person as a reponse
       return Response.ok(jsonEncode(person.toJson()), headers: {'Content-Type': 'application/json'});

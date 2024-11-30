@@ -89,7 +89,7 @@ class VehicleUi {
       if (choice == 'ja') {
 
         // HTTP REQUEST
-        await repoVehicle.add(Vehicle(vehicleId: vehicleId, plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson));
+        await repoVehicle.create(Vehicle(vehicleId: vehicleId, plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson));
         stdout.write("Fordonet har lagts till.");
         await Future.delayed(Duration(seconds: 3));        
         return;
@@ -212,7 +212,7 @@ Future<void> manageVehicle() async {
 
           // HTTP REQUEST
           Vehicle newVehicle = Vehicle(vehicleId: selectedVehicle.vehicleId, plateNumber: plateNumber.toUpperCase(), vehicleType: inputUtils.capitalizeWord(vehicleType), owner: selectedPerson);
-          await repoVehicle.update(selectedVehicle, newVehicle);
+          await repoVehicle.update(selectedVehicle.vehicleId, newVehicle);
           stdout.write("Fordon uppdaterad.");
           await Future.delayed(Duration(seconds: 3));        
           return; 
@@ -227,7 +227,7 @@ Future<void> manageVehicle() async {
     } else if (action == 'd') { // Lets user delete person 
 
       // HTTP REQUEST
-      await repoVehicle.delete(selectedVehicle);
+      await repoVehicle.delete(selectedVehicle.vehicleId);
       stdout.write("Fordonet är borttagen.");
       await Future.delayed(Duration(seconds: 3)); 
     } else {

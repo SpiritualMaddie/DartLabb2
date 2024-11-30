@@ -1,10 +1,9 @@
 import 'dart:convert';
-
+import 'package:shared/interfaces/respository_interface.dart';
 import 'package:shared/models/person.dart';
 import 'package:http/http.dart' as http;
-import 'repository.dart';
 
-class PersonRepository extends Repository<Person>{
+class PersonRepository implements RepositoryInterface<Person>{
 
   static final PersonRepository _instance = PersonRepository._internal();
 
@@ -15,7 +14,7 @@ class PersonRepository extends Repository<Person>{
   final uri = Uri.parse("http://localhost:8080/persons");
   
 
-    @override
+  @override
   Future<List<Person>> getAll() async {
     try {
       // Check for successful response
@@ -38,6 +37,30 @@ class PersonRepository extends Repository<Person>{
       print('Error fetching persons: $error');
       rethrow;
     }
+  }
+  
+  @override
+  Future<Person> create(Person person) {
+    // TODO: implement create
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<Person> delete(int id) {
+    // TODO: implement delete
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<Person?> getById(int id) {
+    // TODO: implement getById
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<Person> update(int id, Person person) {
+    // TODO: implement update
+    throw UnimplementedError();
   }
 // @override
 //   Future<List<Person>> getAll() async {

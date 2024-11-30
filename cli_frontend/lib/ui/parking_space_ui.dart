@@ -42,7 +42,7 @@ class ParkingSpaceUi {
       }
       
       // HTTP REQUEST
-      await repoParkingSpace.add(ParkingSpace(parkingSpaceId: parkingSpaceId, zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
+      await repoParkingSpace.create(ParkingSpace(parkingSpaceId: parkingSpaceId, zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
       stdout.write("Parkeringsplatsen har lagts till.");
       await Future.delayed(Duration(seconds: 3));    
       return;    
@@ -126,7 +126,7 @@ Future<void> manageParkingSpace() async {
 
         // HTTP REQUEST
         ParkingSpace newParkingSpace = ParkingSpace(parkingSpaceId: selectedPs.parkingSpaceId, zone: zone, pricePerHour: pricePerHour);
-        await repoParkingSpace.update(selectedPs, newParkingSpace);
+        await repoParkingSpace.update(selectedPs.parkingSpaceId, newParkingSpace);
         stdout.write("Parkeringsplats uppdaterad.");
         await Future.delayed(Duration(seconds: 3));        
         return;
@@ -134,7 +134,7 @@ Future<void> manageParkingSpace() async {
     } else if (action == 'd') { // Lets user delete space 
 
       // HTTP REQUEST
-      await repoParkingSpace.delete(selectedPs);
+      await repoParkingSpace.delete(selectedPs.parkingSpaceId);
       stdout.write("Parkeringsplats är borttagen.");
       await Future.delayed(Duration(seconds: 3)); 
       return;
