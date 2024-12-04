@@ -1,3 +1,4 @@
+import 'package:objectbox/objectbox.dart';
 import 'package:shared/shared.dart';
 
 @Entity()
