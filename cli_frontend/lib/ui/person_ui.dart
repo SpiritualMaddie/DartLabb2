@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:cli_frontend/repositories/person_repository.dart';
 import 'package:cli_frontend/utils/console_utils.dart';
 import 'package:cli_frontend/utils/input_utils.dart';
 
-import 'package:shared/models/person.dart';
+import 'package:shared/shared.dart';
 
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 import 'dart:io';
 
 

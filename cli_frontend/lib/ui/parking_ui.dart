@@ -7,9 +7,9 @@ import 'package:cli_frontend/ui/vehicle_ui.dart';
 import 'package:cli_frontend/utils/console_utils.dart';
 import 'package:cli_frontend/utils/input_utils.dart';
 
-import 'package:shared/models/parking.dart';
+import 'package:shared/shared.dart';
 
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 import 'dart:io';
 
 
@@ -124,7 +124,7 @@ class ParkingUi {
         }
 
           // HTTP REQUEST
-          await repoParking.create(Parking(parkingId: parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: DateTime.now()));
+          await repoParking.create(Parking(parkingId: parkingId, vehicleId: selectedVehicle.vehicleId, parkingSpaceId: selectedPs.parkingSpaceId, startTime: DateTime.now()));
           stdout.write("Parkeringen har lagts till.");
           await Future.delayed(Duration(seconds: 3));        
           return;
@@ -286,7 +286,7 @@ Future<void> manageParking() async {
               if(changeTime == "ja"){
 
                 // HTTP REQUEST
-                Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: DateTime.now());
+                Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicleId: selectedVehicle.vehicleId, parkingSpaceId: selectedPs.parkingSpaceId, startTime: selectedParking.startTime, endTime: DateTime.now());
                 await repoParking.update(selectedParking.parkingId, newParking);
                 stdout.write("Parkeringen har lagts till.");
                 await Future.delayed(Duration(seconds: 3));
@@ -298,7 +298,7 @@ Future<void> manageParking() async {
             }
 
             // HTTP REQUEST
-            Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedVehicle, parkingSpace: selectedPs, startTime: selectedParking.startTime, endTime: selectedParking.endTime);
+            Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicleId: selectedVehicle.vehicleId, parkingSpaceId: selectedPs.parkingSpaceId, startTime: selectedParking.startTime, endTime: selectedParking.endTime);
             await repoParking.update(selectedParking.parkingId, newParking);
             stdout.write("Parkeringen har lagts till.");
             await Future.delayed(Duration(seconds: 3));        
@@ -381,7 +381,7 @@ Future<void> manageParking() async {
       while (true) {
 
         // HTTP REQUEST
-        Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicle: selectedParking.vehicle, parkingSpace: selectedParking.parkingSpace, startTime: selectedParking.startTime, endTime: DateTime.now());
+        Parking newParking = Parking(parkingId: selectedParking.parkingId, vehicleId: selectedParking.vehicleId, parkingSpaceId: selectedParking.parkingSpaceId, startTime: selectedParking.startTime, endTime: DateTime.now());
         await repoParking.update(selectedParking.parkingId, newParking);
         stdout.write("Parkeringen har avslutats.");
         await Future.delayed(Duration(seconds: 3));    

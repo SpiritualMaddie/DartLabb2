@@ -1,52 +1,51 @@
 import 'dart:convert';
 import 'package:cli_server/repositories/person_repository.dart';
-import 'package:shared/models/person.dart';
+import 'package:shared/shared.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_router/shelf_router.dart';
 
-class PersonHandlers {
-  var repoPerson = PersonRepository();
+PersonRepository repoPerson = PersonRepository();
 
-  Response rootHandler(Request req) {
-    return Response.ok('Hello, World!\n');
+Response rootHandler(Request req) {
+  return Response.ok('Hello, World!\n');
+}
+
+Future<Response> getAllPersonsHandler(Request req) async {
+  try {
+    // Fetch all persons
+    var persons = await repoPerson.getAll();
+
+    return Response.ok(jsonEncode(persons),
+        headers: {'Content-Type': 'application/json'});
+  } catch (error, stacktrace) {
+    // Log error and stacktrace for debugging
+    print('Error occurred: $error \n $stacktrace');
+
+    // Return structured response as JSON
+    return Response.internalServerError(
+        body: jsonEncode(
+            {'error': 'An error occurred:', 'details': error.toString()}),
+        headers: {'Content-Type': 'application/json'});
   }
+}
 
-  Future<Response> getAllPersonsHandler(Request req) async {
-    try{
-      // Fetch all persons
-      var persons = await repoPerson.getAll();
+Future<Response> createPersonHandler(Request req) async {
+  try {
+    // Read the request body as a string
+    final data = await req.readAsString();
 
-      return Response.ok(jsonEncode(persons), headers: {'Content-Type': 'application/json'});
-    }catch(error, stacktrace){
-      // Log error and stacktrace for debugging
-      print('Error occurred: $error \n $stacktrace');
+    // Deserialize JSON into a Person instance
+    final person = Person.fromJson(jsonDecode(data));
 
-      // Return structured response as JSON
-      return Response.internalServerError(
-        body: jsonEncode({'error' : 'An error occurred:', 'details': error.toString()}),
-        headers: {'Content-Type': 'application/json'}
-        );
-    }
+    // Add the person to the list
+    await repoPerson.create(person);
+
+    // Return the created person as a reponse
+    return Response.ok(jsonEncode(person.toJson()),
+        headers: {'Content-Type': 'application/json'});
+  } catch (error) {
+    return Response.internalServerError(body: 'An error occurred: $error');
   }
-
-  Future<Response> createPersonHandler(Request req) async {
-    try{
-
-      // Read the request body as a string
-      final data = await req.readAsString();
-
-      // Deserialize JSON into a Person instance
-      final person = Person.fromJson(jsonDecode(data));
-
-      // Add the person to the list
-      await repoPerson.create(person);
-
-      // Return the created person as a reponse
-      return Response.ok(jsonEncode(person.toJson()), headers: {'Content-Type': 'application/json'});
-    }catch(error){
-      return Response.internalServerError(body: 'An error occurred: $error');
-    }
-  }
+}
 
   // Future<Response> getPersonByIdHandler(Request req) async {
   //   try{
@@ -101,4 +100,3 @@ class PersonHandlers {
   //     return Response.internalServerError(body: 'An error occurred: $error');
   //   }
   // }
-}

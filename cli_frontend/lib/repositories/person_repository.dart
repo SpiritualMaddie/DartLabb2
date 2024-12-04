@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:shared/interfaces/respository_interface.dart';
-import 'package:shared/models/person.dart';
+import 'package:shared/shared.dart';
 import 'package:http/http.dart' as http;
 
 class PersonRepository implements RepositoryInterface<Person>{
@@ -40,13 +39,13 @@ class PersonRepository implements RepositoryInterface<Person>{
   }
   
   @override
-  Future<Person> create(Person person) {
+  Future<Person?> create(Person item) {
     // TODO: implement create
     throw UnimplementedError();
   }
   
   @override
-  Future<Person> delete(int id) {
+  Future<Person?> delete(int id) {
     // TODO: implement delete
     throw UnimplementedError();
   }
@@ -58,10 +57,13 @@ class PersonRepository implements RepositoryInterface<Person>{
   }
   
   @override
-  Future<Person> update(int id, Person person) {
+  Future<Person?> update(int id, Person item) {
     // TODO: implement update
     throw UnimplementedError();
   }
+}
+  
+
 // @override
 //   Future<List<Person>> getAll() async {
 
@@ -73,5 +75,3 @@ class PersonRepository implements RepositoryInterface<Person>{
 
 //     return (json as List).map((person) => Person.fromJson(person)).toList();
 //   }
-
-}

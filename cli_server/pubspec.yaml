@@ -12,6 +12,7 @@ dependencies:
   shelf_router: ^1.1.0
   shared:
     path: ../shared
+  objectbox: ^4.0.3
 
 dev_dependencies:
   http: ^1.1.0

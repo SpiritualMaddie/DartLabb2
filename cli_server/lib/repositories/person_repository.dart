@@ -1,5 +1,5 @@
-import 'package:shared/interfaces/respository_interface.dart';
-import 'package:shared/models/person.dart';
+import 'package:cli_server/server_config.dart';
+import 'package:shared/shared.dart';
 
 class PersonRepository implements RepositoryInterface<Person>{
 
@@ -8,35 +8,42 @@ class PersonRepository implements RepositoryInterface<Person>{
   PersonRepository._internal();
 
   factory PersonRepository() => _instance;
-  
-  @override
-  Future<Person> create(Person person) {
-    // TODO: implement create
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<Person> delete(int id) {
-    // TODO: implement delete
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<List<Person>> getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<Person?> getById(int id) {
-    // TODO: implement getById
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<Person> update(int id, Person person) {
-    // TODO: implement update
-    throw UnimplementedError();
-  }
 
+  Box<Person> personBox = ServerConfig.instance.store.box<Person>();
+  
+  @override
+  Future<Person?> create(Person person) async {
+    
+    personBox.put(person, mode:PutMode.insert);
+
+    return person;
   }
+  
+  @override
+  Future<Person?> delete(int id) async {
+    Person? person = personBox.get(id);
+
+    if(person != null){
+      personBox.remove(id);
+    }
+
+    return person;
+  }
+  
+  @override
+  Future<List<Person>> getAll() async {
+    
+    return personBox.getAll();
+  }
+  
+  @override
+  Future<Person?> getById(int id) async {
+    return personBox.get(id);
+  }
+  
+  @override
+  Future<Person?> update(int id, Person newPerson) async {
+    personBox.put(newPerson, mode: PutMode.update);
+    return newPerson;
+  }
+}

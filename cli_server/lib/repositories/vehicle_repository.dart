@@ -1,6 +1,5 @@
-import 'package:shared/interfaces/respository_interface.dart';
-import 'package:shared/models/vehicle.dart';
-
+import 'package:cli_server/server_config.dart';
+import 'package:shared/shared.dart';
 
 class VehicleRepository implements RepositoryInterface<Vehicle>{
 
@@ -10,33 +9,42 @@ class VehicleRepository implements RepositoryInterface<Vehicle>{
 
   factory VehicleRepository() => _instance;
   
+  Box<Vehicle> vehicleBox = ServerConfig.instance.store.box<Vehicle>();
+  
   @override
-  Future<Vehicle> create(Vehicle vehicle) {
-    // TODO: implement create
-    throw UnimplementedError();
+  Future<Vehicle?> create(Vehicle vehicle) async {
+    
+    vehicleBox.put(vehicle, mode:PutMode.insert);
+
+    return vehicle;
   }
   
   @override
-  Future<Vehicle> delete(int id) {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<Vehicle?> delete(int id) async {
+    Vehicle? vehicle = vehicleBox.get(id);
+
+    if(vehicle != null){
+      vehicleBox.remove(id);
+    }
+
+    return vehicle;
   }
   
   @override
-  Future<List<Vehicle>> getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
+  Future<List<Vehicle>> getAll() async {
+    
+    var vehicleList = vehicleBox.getAllAsync();
+    return vehicleList;
   }
   
   @override
-  Future<Vehicle?> getById(int id) {
-    // TODO: implement getById
-    throw UnimplementedError();
+  Future<Vehicle?> getById(int id) async {
+    return vehicleBox.get(id);
   }
   
   @override
-  Future<Vehicle> update(int id, Vehicle vehicle) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<Vehicle?> update(int id, Vehicle newVehicle) async {
+    vehicleBox.put(newVehicle, mode: PutMode.update);
+    return newVehicle;
   }
 }

@@ -1,6 +1,5 @@
-import 'package:shared/interfaces/respository_interface.dart';
-import 'package:shared/models/vehicle.dart';
-
+import 'package:shared/shared.dart';
+//import 'package:http/http.dart' as http;
 
 class VehicleRepository implements RepositoryInterface<Vehicle>{
 
@@ -11,13 +10,13 @@ class VehicleRepository implements RepositoryInterface<Vehicle>{
   factory VehicleRepository() => _instance;
   
   @override
-  Future<Vehicle> create(Vehicle vehicle) {
+  Future<Vehicle?> create(Vehicle item) {
     // TODO: implement create
     throw UnimplementedError();
   }
   
   @override
-  Future<Vehicle> delete(int id) {
+  Future<Vehicle?> delete(int id) {
     // TODO: implement delete
     throw UnimplementedError();
   }
@@ -35,7 +34,7 @@ class VehicleRepository implements RepositoryInterface<Vehicle>{
   }
   
   @override
-  Future<Vehicle> update(int id, Vehicle vehicle) {
+  Future<Vehicle?> update(int id, Vehicle item) {
     // TODO: implement update
     throw UnimplementedError();
   }
