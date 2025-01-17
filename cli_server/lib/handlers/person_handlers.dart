@@ -1,104 +1,164 @@
 import 'dart:convert';
 import 'package:cli_server/repositories/person_repository.dart';
-import 'package:shared/models/person.dart';
+import 'package:cli_server/utils/request_utils.dart';
+import 'package:logger/logger.dart';
+import 'package:shared/shared.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_router/shelf_router.dart';
 
-class PersonHandlers {
-  var repoPerson = PersonRepository();
+PersonRepository repoPerson = PersonRepository();
+final logger = Logger();
 
-  Response rootHandler(Request req) {
-    return Response.ok('Hello, World!\n');
-  }
+Future<Response> getAllPersonsHandler(Request req) async {
+  try {
+    // Fetch all persons
+    var persons = await repoPerson.getAll();
 
-  Future<Response> getAllPersonsHandler(Request req) async {
-    try{
-      // Fetch all persons
-      var persons = await repoPerson.getAll();
-
-      return Response.ok(jsonEncode(persons), headers: {'Content-Type': 'application/json'});
-    }catch(error, stacktrace){
-      // Log error and stacktrace for debugging
-      print('Error occurred: $error \n $stacktrace');
-
-      // Return structured response as JSON
-      return Response.internalServerError(
-        body: jsonEncode({'error' : 'An error occurred:', 'details': error.toString()}),
-        headers: {'Content-Type': 'application/json'}
-        );
+    if (persons.isNotEmpty) {
+      return Response.ok(jsonEncode(persons),
+          headers: {'Content-Type': 'application/json'});
     }
+
+    return Response.ok(jsonEncode({'message': 'No persons in the db'}),
+        headers: {'Content-Type': 'application/json'});
+  } catch (error, stacktrace) {
+    // Log error and stacktrace for debugging
+    logger.e(
+      "Error fetching all persons: ${error.runtimeType}",
+      error: error,
+      stackTrace: stacktrace);
+
+    // Return structured response as JSON
+    return handleInternalServerError();
   }
+}
 
-  Future<Response> createPersonHandler(Request req) async {
-    try{
+Future<Response> createPersonHandler(Request req) async {
+  try {
+    // Read the request body as a string
+    final data = await req.readAsString();
 
-      // Read the request body as a string
-      final data = await req.readAsString();
-
-      // Deserialize JSON into a Person instance
+    if (data.isNotEmpty) {
+      // Deserialize JSON into a Person object
       final person = Person.fromJson(jsonDecode(data));
 
-      // Add the person to the list
-      await repoPerson.add(person);
+      // Add the person to the db
+      await repoPerson.create(person);
 
-      // Return the created person as a reponse
-      return Response.ok(jsonEncode(person.toJson()), headers: {'Content-Type': 'application/json'});
-    }catch(error){
-      return Response.internalServerError(body: 'An error occurred: $error');
+      return Response.ok(jsonEncode(person.toJson()),
+          headers: {'Content-Type': 'application/json'});
     }
+
+    return Response.badRequest(body: 'Request body cannot be empty');
+  } catch (error, stacktrace) {
+    // Log error and stacktrace for debugging
+    logger.e(
+      "Error creating person: ${error.runtimeType}",
+      error: error,
+      stackTrace: stacktrace);
+
+    // Return structured response as JSON
+    return handleInternalServerError();
   }
+}
 
-  // Future<Response> getPersonByIdHandler(Request req) async {
-  //   try{
-  //     // Fetch person by id
-  //     var personId = req.params['id'];
-  //     var persons = await repoPerson.getById(personId);
+Future<Response> getPersonByIdHandler(Request req) async {
+  try {
+    // Fetch persons id
+    final personId = parseIdFromRequest(req);
 
-  //     return Response.ok(jsonEncode(persons), headers: {'Content-Type': 'application/json'});
-  //   }catch(error, stacktrace){
-  //     // Log error and stacktrace for debugging
-  //     print('Error occurred: $error \n $stacktrace');
+    if (personId != null) {
+      // Fetch person from db
+      var person = await repoPerson.getById(personId);
 
-  //     // Return structured response as JSON
-  //     return Response.internalServerError(
-  //       body: jsonEncode({'error' : 'An error occurred:', 'details': error.toString()}),
-  //       headers: {'Content-Type': 'application/json'}
-  //       );
-  //   }
-  // }
+      if (person != null) {
+        return Response.ok(jsonEncode(person),
+            headers: {'Content-Type': 'application/json'});
+      }
 
-  // Future<Response> updatePersonHandler(Request req) async {
-  //   try{
+      return Response.notFound('The person cannot be found.');
+    }
 
-  //     final personId = req.params['id'];
-  //     final data = await req.readAsString();
+    return invalidIdResponse();
+  } catch (error, stacktrace) {
+    // Log error and stacktrace for debugging
+    logger.e(
+      "Error fetching person by id: ${error.runtimeType}",
+      error: error,
+      stackTrace: stacktrace);
 
-  //     // Deserialize JSON into a Person instance
-  //     final person = Person.fromJson(jsonDecode(data));
+    // Return structured response as JSON
+    return handleInternalServerError();
+  }
+}
 
-  //     // Add the person to the list
-  //     final personToUpdate = await repoPerson.getById(personId);
-  //     final updatedPerson = Person.fromJson(jsonDecode());
-  //     await repoPerson.add(person);
+Future<Response> updatePersonHandler(Request req) async {
+  try {
+    // Fetch and parse persons id
+    final personId = parseIdFromRequest(req);
 
-  //     // Return the created person as a reponse
-  //     return Response.ok(jsonEncode(person.toJson()), headers: {'Content-Type': 'application/json'});
-  //   }catch(error){
-  //     return Response.internalServerError(body: 'An error occurred: $error');
-  //   }
-  // }
+    if (personId != null) {
+      // Verify that the person exists in the database
+      final existingPerson = await repoPerson.getById(personId);
 
-  // Future<Response> deletePersonHandler(Request req) async {
-  //   try {
-  //     final personId = req.params['id'];
+      if (existingPerson != null) {
+        final data = await req.readAsString();
+        final json = jsonDecode(data);
 
-  //     // Fetch person by ID, if necessary
-  //     final personToDelete = await repoPerson.getbyId(personId);
-  //     await repoPerson.delete(personToDelete);
+        if (data.isNotEmpty || json != null) {
+          var person = Person.fromJson(json);
+          var updatedPerson = await repoPerson.update(personId, person);
 
-  //     return Response.ok('Person deleted successfully');
-  //   }catch(error){
-  //     return Response.internalServerError(body: 'An error occurred: $error');
-  //   }
-  // }
+          return Response.ok(jsonEncode(updatedPerson),
+              headers: {'Content-Type': 'application/json'});
+        }
+
+        return Response.badRequest(body: 'Invalid request body.');
+      }
+
+      return Response.notFound('Person not found in the database.');
+    }
+
+    return invalidIdResponse();
+  } catch (error, stacktrace) {
+    // Log error and stacktrace for debugging
+    logger.e(
+      "Error updating person: ${error.runtimeType}",
+      error: error,
+      stackTrace: stacktrace);
+
+    // Return structured response as JSON
+    return handleInternalServerError();
+  }
+}
+
+Future<Response> deletePersonHandler(Request req) async {
+  try {
+    // Fetch persons id
+    final personId = parseIdFromRequest(req);
+
+    if (personId != null) {
+      // Verify that the person exists in the database
+      final existingPerson = await repoPerson.getById(personId);
+
+      if (existingPerson != null) {
+        var person = await repoPerson.delete(personId);
+
+        return Response.ok(jsonEncode(person),
+            headers: {'Content-Type': 'application/json'});
+      }
+
+      return Response.notFound('Person not found in the database.');
+    }
+
+    return invalidIdResponse();
+  } catch (error, stacktrace) {
+    // Log error and stacktrace for debugging
+    logger.e(
+      "Error deleting person: ${error.runtimeType}",
+      error: error,
+      stackTrace: stacktrace);
+
+    // Return structured response as JSON
+    return handleInternalServerError();
+  }
 }
