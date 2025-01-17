@@ -25,15 +25,13 @@ class ServerConfig {
     router = Router();
     store = openStore();
 
-    // Test-handler in dev mode
-    router.get('/', rootHandler);
-
     // Person Routes
-    router.get('/persons', getAllPersonsHandler);
-    router.post('/persons', createPersonHandler);
-    // router.get('/getpersonbyid/<id>', getPersonByIdHandler);
-    // router.put('/updateperson/<id>', updatePersonHandler);
-    // router.delete('/deleteperson/<id>', deletePersonHandler);
+    router.get('/persons', getAllPersonsHandler); // List all persons
+    router.post('/persons', createPersonHandler); // Create a new person
+    router.get('/persons/<id>', getPersonByIdHandler); // Get a specific person
+    router.put('/persons/<id>', updatePersonHandler); // Update a specific person
+    router.delete('/persons/<id>', deletePersonHandler); // Delete a specific person
+
 
     // Vehicle Routes
     router.get('/vehicles', getAllVehiclesHandler);
@@ -42,7 +40,7 @@ class ServerConfig {
     router.put('/vehicles/<id>', updateVehicleHandler);
     router.delete('/vehicles/<id>', deleteVehicleHandler);
 
-    // Parking Space Routes
+    // ParkingSpace Routes
     router.get('/parkingspaces', getAllParkingSpacesHandler);
     router.post('/parkingspaces', createParkingSpaceHandler);
     router.get('/parkingspaces/<id>', getParkingSpaceByIdHandler);

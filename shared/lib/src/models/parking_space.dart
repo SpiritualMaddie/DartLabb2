@@ -20,7 +20,7 @@ class ParkingSpace {
     return """
 Id: $parkingSpaceId
 Zone: $zone
-    $pricePerHour kr/h
+$pricePerHour kr/h
 ---------------------------------""";
   }
 

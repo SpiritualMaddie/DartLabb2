@@ -36,16 +36,3 @@ void main(List<String> args) async {
     exit(0);
    });
 }
-
-
-  // Blueprint
-  //..post('/items', _postItemHandler);
-// Blueprint
-// Future<Response> _postItemHandler(Request request) async {
-//   final data = await request.readAsString();
-//   final json = jsonDecode(data);
-
-//   print(json);
-
-//   return Response.ok("yey");
-// }

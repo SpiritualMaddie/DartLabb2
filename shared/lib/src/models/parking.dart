@@ -1,4 +1,3 @@
-import 'package:objectbox/objectbox.dart';
 import 'package:shared/shared.dart';
 
 @Entity()
@@ -25,7 +24,7 @@ class Parking {
 
   @Transient()
   String get endTimeStatus {
-    return endTime != null ? endTime.toString() : "pågående";
+    return endTime != null ? formatDateTime(endTime!) : "pågående";
   }
 
   // Formatting date
@@ -37,16 +36,24 @@ class Parking {
 
   // Detailed string
   String toDetailedString(Vehicle vehicle, ParkingSpace parkingSpace) {
-    String formattedStartTime = formatDateTime(startTime);
-    String formattedEndTime =
-        endTime != null ? formatDateTime(endTime!) : "pågående";
 
     return """
- Fordon: ${vehicle.licensePlate} - ${vehicle.vehicleType}
-    Zone: ${parkingSpace.zone}
-    Starttid: $formattedStartTime
-    Sluttid:  $formattedEndTime
-    Parkingsid: $parkingId
+Parkingsid: $parkingId
+Fordon: ${vehicle.licensePlate} - ${vehicle.vehicleType}
+Zone: ${parkingSpace.zone}
+Starttid: ${formatDateTime(startTime)}
+Sluttid: $endTimeStatus
+-----------------------------------------------------------""";
+  }
+
+  @override
+  String toString() {
+    return """
+Parkingsid: $parkingId
+Fordonsid: $vehicleId
+Parkeringsplatsid: $parkingSpaceId
+Startdatum: ${formatDateTime(startTime)}
+Slutdatum: $endTimeStatus
 -----------------------------------------------------------""";
   }
 

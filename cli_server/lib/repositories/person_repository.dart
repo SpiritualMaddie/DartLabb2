@@ -4,16 +4,13 @@ import 'package:shared/shared.dart';
 class PersonRepository implements RepositoryInterface<Person>{
 
   static final PersonRepository _instance = PersonRepository._internal();
-
   PersonRepository._internal();
-
   factory PersonRepository() => _instance;
 
   Box<Person> personBox = ServerConfig.instance.store.box<Person>();
   
   @override
-  Future<Person?> create(Person person) async {
-    
+  Future<Person?> create(Person person) async {  
     personBox.put(person, mode:PutMode.insert);
 
     return person;
@@ -31,8 +28,7 @@ class PersonRepository implements RepositoryInterface<Person>{
   }
   
   @override
-  Future<List<Person>> getAll() async {
-    
+  Future<List<Person>> getAll() async {   
     return personBox.getAll();
   }
   

@@ -96,8 +96,9 @@ Future<void> personMenu() async{
 
     List<String> options = ["1. Lägg till ny användare", 
                             "2. Visa alla användare och hantera dom", 
-                            "3. Tillbaka till startmenyn", 
-                            "4. Avsluta"];
+                            "3. Sök efter användare med id",
+                            "4. Tillbaka till startmenyn", 
+                            "5. Avsluta"];
     Menu mainMenu = Menu(options:options, prompt:prompt);
 
     print(mainMenu);
@@ -115,9 +116,12 @@ Future<void> personMenu() async{
           await personUi.managePerson();
           break;
         case "3":
-          await startMenu();        
+          await personUi.searchPerson();        
           break;
         case "4":
+          await startMenu();        
+          break;
+        case "5":
           consoleUtils.endScreen();
         default:
           consoleUtils.invalidChoice();
@@ -132,121 +136,142 @@ Future<void> personMenu() async{
 
 // ************************* VEHICLE MENU *********************************************
 Future<void> vehicleMenu() async{
-  consoleUtils.clearConsole();
-  String prompt = "Här kan du hantera fordon\n";
 
-  List<String> options = ["1. Lägg till nytt fordon", 
-                          "2. Visa alla fordon och hantera dom", 
-                          "3. Tillbaka till startmenyn", 
-                          "4. Avsluta"];
-  Menu mainMenu = Menu(options:options, prompt:prompt);
-
-  print(mainMenu);
-
-  try{
-
-    var input = stdin.readLineSync();
+  while(true){
     consoleUtils.clearConsole();
+    String prompt = "Här kan du hantera fordon\n";
 
-    switch (input) {
-      case "1":
-        await vehicleUi.createNewVehicle();      
-        break;
-      case "2":
-        await vehicleUi.manageVehicle();       
-        break;
-      case "3":
-        await startMenu();        
-        break;
-      case "4":
-        consoleUtils.endScreen();
-      default:
-        consoleUtils.invalidChoice();
+    List<String> options = ["1. Lägg till nytt fordon", 
+                            "2. Visa alla fordon och hantera dom", 
+                            "3. Sök efter fordon med id", 
+                            "4. Tillbaka till startmenyn",
+                            "5. Avsluta"];
+    Menu mainMenu = Menu(options:options, prompt:prompt);
+
+    print(mainMenu);
+
+    try{
+
+      var input = stdin.readLineSync();
+      consoleUtils.clearConsole();
+
+      switch (input) {
+        case "1":
+          await vehicleUi.createNewVehicle();      
+          break;
+        case "2":
+          await vehicleUi.manageVehicle();       
+          break;
+        case "3":
+          await vehicleUi.searchVehicle();        
+          break;
+        case "4":
+          await startMenu();        
+          break;
+        case "5":
+          consoleUtils.endScreen();
+        default:
+          consoleUtils.invalidChoice();
+      }
+    }catch(error){
+      stdout.writeln("Unable to fetch due to error: ${error}");
+      await Future.delayed(Duration(seconds: 3));
+      return;
     }
-  }catch(error){
-    stdout.writeln("Unable to fetch due to error: ${error}");
-    await Future.delayed(Duration(seconds: 3));
-    return;
   }
 }
 
 // ************************* PARKINGS MENU ********************************************
 Future<void> parkingsMenu() async{
-  consoleUtils.clearConsole();
-  String prompt = "Här kan du hantera parkeringar\n";
 
-  List<String> options = ["1. Lägg till en parkering", 
-                          "2. Visa alla parkeringar och hantera dom", 
-                          "3. Tillbaka till startmenyn", 
-                          "4. Avsluta"];
-  Menu mainMenu = Menu(options:options, prompt:prompt);
-
-  print(mainMenu);
-
-  try{
-
-    var input = stdin.readLineSync();
+  while(true){
     consoleUtils.clearConsole();
+    String prompt = "Här kan du hantera parkeringar\n";
 
-    switch (input) {
-      case "1":
-        await parkingUi.createNewParking();      
-        break;
-      case "2":
-        await parkingUi.manageParking();       
-        break;
-      case "3":
-        await startMenu();        
-        break;
-      case "4":
-        consoleUtils.endScreen();
-      default:
-        consoleUtils.invalidChoice();
+    List<String> options = ["1. Lägg till en parkering", 
+                            "2. Visa alla parkeringar och hantera dom", 
+                            "3. Sök efter parking med id", 
+                            "4. Tillbaka till startmenyn", 
+                            "5. Avsluta"];
+    Menu mainMenu = Menu(options:options, prompt:prompt);
+
+    print(mainMenu);
+
+    try{
+
+      var input = stdin.readLineSync();
+      consoleUtils.clearConsole();
+
+      switch (input) {
+        case "1":
+          await parkingUi.createNewParking();      
+          break;
+        case "2":
+          await parkingUi.manageParking();       
+          break;
+        case "3":
+          await parkingUi.searchParking();        
+          break;
+        case "4":
+          await startMenu();        
+          break;
+        case "5":
+          consoleUtils.endScreen();
+        default:
+          consoleUtils.invalidChoice();
+      }
+    }catch(error){
+      stdout.writeln("Unable to fetch due to error: ${error}");
+      await Future.delayed(Duration(seconds: 3));
+      return;
     }
-  }catch(error){
-    stdout.writeln("Unable to fetch due to error: ${error}");
-    await Future.delayed(Duration(seconds: 3));
-    return;
   }
 }
 
 // ************************* PARKINGSPACES MENU ***************************************
 Future<void> parkingSpacesMenu() async{
-  consoleUtils.clearConsole();
-  String prompt = "Här kan du hantera parkerinsplatser\n";
 
-  List<String> options = ["1. Lägg till en parkeringsplats", 
-                          "2. Visa alla parkeringsplatser och hantera dom", 
-                          "3. Tillbaka till startmenyn", 
-                          "4. Avsluta"];
-  Menu mainMenu = Menu(options:options, prompt:prompt);
-
-  print(mainMenu);
-
-  try{
-
-    var input = stdin.readLineSync();
+  while(true){
     consoleUtils.clearConsole();
+    String prompt = "Här kan du hantera parkerinsplatser\n";
 
-    switch (input) {
-      case "1":
-        await parkingSpaceUi.createNewParkingSpace();      
-        break;
-      case "2":
-        await parkingSpaceUi.manageParkingSpace();       
-        break;
-      case "3":
-        await startMenu();        
-        break;
-      case "4":
-        consoleUtils.endScreen();
-      default:
-        consoleUtils.invalidChoice();
+    List<String> options = ["1. Lägg till en parkeringsplats", 
+                            "2. Visa alla parkeringsplatser och hantera dom", 
+                            "3. Sök efter parkingsplats med id", 
+                            "4. Tillbaka till startmenyn", 
+                            "5. Avsluta"];
+    Menu mainMenu = Menu(options:options, prompt:prompt);
+
+    print(mainMenu);
+
+    try{
+
+      var input = stdin.readLineSync();
+      consoleUtils.clearConsole();
+
+      switch (input) {
+        case "1":
+          await parkingSpaceUi.createNewParkingSpace();      
+          break;
+        case "2":
+          await parkingSpaceUi.manageParkingSpace();       
+          break;
+        case "3":
+          await parkingSpaceUi.searchParkingSpace();        
+          break;
+        case "4":
+          await startMenu();        
+          break;
+        case "5":
+          consoleUtils.endScreen();
+        default:
+          consoleUtils.invalidChoice();
+      }
+    }catch(error){
+      stdout.writeln("Unable to fetch due to error: ${error}");
+      await Future.delayed(Duration(seconds: 3));
+      return;
     }
-  }catch(error){
-    stdout.writeln("Unable to fetch due to error: ${error}");
-    await Future.delayed(Duration(seconds: 3));
-    return;
   }
 }
 

@@ -18,9 +18,9 @@ class Person {
   @override
   String toString() {
     return """
+Id: $personId
 Namn: $firstName $lastName
-   Personnr: $ssn
-   Id: $personId
+Personnr: $ssn
 -----------------------------------------------------------""";
   }
 

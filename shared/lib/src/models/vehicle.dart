@@ -1,4 +1,3 @@
-import 'package:objectbox/objectbox.dart';
 import 'package:shared/shared.dart';
 
 @Entity()
@@ -16,12 +15,22 @@ class Vehicle {
 
   Vehicle({this.vehicleId = 0, required this.licensePlate, required this.vehicleType, required this.personId});
 
+  @override
+  String toString() {
+    return """
+Id: $vehicleId
+Fordon: $vehicleType
+Regnr: $licensePlate
+Ägarid: $personId
+-----------------------------------------------------------""";
+  }
+
   String toDetailedString(Person owner) {
     return """
 Id: $vehicleId
 Regnr: $licensePlate
-    Typ: $vehicleType
-    Ägare: ${owner.firstName} ${owner.lastName}
+Typ: $vehicleType
+Ägare: ${owner.firstName} ${owner.lastName}
 -----------------------------------------------------------""";
   }
 

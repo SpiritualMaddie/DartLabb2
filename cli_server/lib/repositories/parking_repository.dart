@@ -4,16 +4,13 @@ import 'package:shared/shared.dart';
 class ParkingRepository implements RepositoryInterface<Parking>{
 
   static final ParkingRepository _instance = ParkingRepository._internal();
-
   ParkingRepository._internal();
-
   factory ParkingRepository() => _instance;
 
   Box<Parking> parkingBox = ServerConfig.instance.store.box<Parking>();
   
   @override
   Future<Parking?> create(Parking parking) async {
-    
     parkingBox.put(parking, mode:PutMode.insert);
 
     return parking;
@@ -32,9 +29,7 @@ class ParkingRepository implements RepositoryInterface<Parking>{
   
   @override
   Future<List<Parking>> getAll() async {
-    
-    var parkingList = parkingBox.getAllAsync();
-    return parkingList;
+    return parkingBox.getAll();
   }
   
   @override
