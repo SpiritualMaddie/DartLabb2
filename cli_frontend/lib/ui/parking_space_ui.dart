@@ -3,9 +3,8 @@ import 'package:cli_frontend/repositories/parking_space_repository.dart';
 import 'package:cli_frontend/utils/console_utils.dart';
 import 'package:cli_frontend/utils/input_utils.dart';
 
-import 'package:shared/models/parking_space.dart';
+import 'package:shared/shared.dart';
 
-import 'package:http/http.dart' as http;
 import 'dart:io';
 
 
@@ -18,7 +17,7 @@ class ParkingSpaceUi {
   var inputUtils = InputUtils();
   var consoleUtils = ConsoleUtils();
 
-  Future<void> addNewParkingSpace() async{
+  Future<void> createNewParkingSpace() async{
     while (true) {
       consoleUtils.clearConsole();
       stdout.write("\nLägg till ny parkeringsplats (Undvik å, ä, ö)\n");  
@@ -29,27 +28,66 @@ class ParkingSpaceUi {
         continue;
       }
 
-      int? pricePerHour = inputUtils.getValidIntPrice("Pris per timme(ange heltal):");
+      int? pricePerHour = inputUtils.getValidIntWithLoop("Kronor per timme(ange heltal):");
       if(pricePerHour == null){
-        consoleUtils.invalidChoice();
-        continue;
-      }
-
-      int? parkingSpaceId = inputUtils.getValidIntPrice("Parkingsplatsid (heltal tresiffrigt, börjar med 3 (tex 311)):");
-      if(parkingSpaceId == null){
         consoleUtils.invalidChoice();
         continue;
       }
       
       // HTTP REQUEST
-      await repoParkingSpace.add(ParkingSpace(parkingSpaceId: parkingSpaceId, zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
+      await repoParkingSpace.create(ParkingSpace(zone: inputUtils.capitalizeWord(zone), pricePerHour: pricePerHour));
       stdout.write("Parkeringsplatsen har lagts till.");
       await Future.delayed(Duration(seconds: 3));    
       return;    
     }  
 }
 
+  Future<void> searchParkingSpace() async {
+    while (true) {
+      var parkingSpaceId;
+      consoleUtils.clearConsole();
+
+      parkingSpaceId =
+          inputUtils.getValidIntWithLoop("Sök efter en parkingsplats med id.\nId:");
+
+      // HTTP REQUEST
+      var parkingSpace = await repoParkingSpace.getById(parkingSpaceId);
+
+      if (parkingSpace == null) {
+        //stdout.writeln("Parkingsplatsen hittades inte, vänligen försök igen.");
+        await Future.delayed(Duration(seconds: 3));
+        continue;
+      }
+
+      // Show parking space
+      stdout.writeln(
+          "\n-----------------------------------------------------------\n");
+      stdout.writeln(parkingSpace);
+      stdout.writeln(
+          "\n-----------------------------------------------------------\n");
+
+      while (true) {
+        stdout.writeln(
+            "Välj 's' för att söka igen eller 'b' för att backa tillbaka till parkingsplatsmenyn");
+
+        var action = stdin.readLineSync()?.trim().toLowerCase() ?? "";
+
+        if (action == 's') {
+          break;
+        } else if (action == 'b') {
+          return;
+        } else {
+          stdout.writeln("Felaktigt val, försök igen");
+          await Future.delayed(Duration(seconds: 2));
+        }
+      }
+    }
+  }
+
 Future<void> manageParkingSpace() async {
+  var parkingSpaces;
+  var selectedPs;
+
   while (true) {
     consoleUtils.clearConsole();
     stdout.writeln("\nParkeringsplatser");
@@ -57,50 +95,56 @@ Future<void> manageParkingSpace() async {
     stdout.writeln("\n-----------------------------------------------------------\n");
     
     // HTTP REQUEST
-    var parkingSpaces;
-    try{
-
-      parkingSpaces = await repoParkingSpace.getAll();
-
-    }catch(error){
-      stdout.writeln("Unable to fetch due to error: ${error}");
-      await Future.delayed(Duration(seconds: 3));
-      return;
-    }
+    parkingSpaces = await repoParkingSpace.getAll();
     if (parkingSpaces.isEmpty) {
-      stdout.writeln("Inga parkeringsplatser finns i systemet.");
+      stdout.writeln("Inga parkingsplatser finns i systemet.");
       await Future.delayed(Duration(seconds: 3));
       return;
     }
-    
+
     for (var i = 0; i < parkingSpaces.length; i++) {
-      stdout.writeln("${i + 1}. ${parkingSpaces[i]}");
+      stdout.writeln("${parkingSpaces[i]}");
     }
     
     // Lets user choose a parkingspace to edit or delete
     stdout.writeln("\n-----------------------------------------------------------\n");
-    stdout.write("Välj ett nummer för att redigera eller ta bort en parkeringsplats (eller 'b' för att gå tillbaka): ");
+    stdout.write("Välj ett id för att redigera eller ta bort en parkeringsplats (eller 'b' för att gå tillbaka):\n");
     
-    var input = stdin.readLineSync()?.trim().toLowerCase() ?? "";
-    
-    if (input == 'b') {
-      return;
-    }
-    
-    // Check if parkingspace exists
-    var index = int.tryParse(input);
-    if (index == null || index < 1 || index > parkingSpaces.length) {
-      consoleUtils.invalidChoice();
-      continue;
-    }
-    
-    consoleUtils.clearConsole();
-    ParkingSpace selectedPs = parkingSpaces[index - 1];
-    stdout.writeln("Du har valt:\n ${selectedPs}");
-    stdout.write("Vill du redigera (e) eller ta bort (d) denna plats? ");
+      while (true) {
+        var input = stdin.readLineSync()?.trim().toLowerCase() ?? "";
+
+        if (input == 'b') {
+          return; // Exit if the user chooses to go back
+        }
+
+        // Validate if input is an integer
+        int? index = inputUtils.getValidInt(input);
+        if (index == null) {
+          continue; // Loop until a valid integer is entered
+        }
+
+        // Get the selected parking space and check if they exist
+        selectedPs = await repoParkingSpace.getById(index);
+        if (selectedPs == null) {
+          //stdout.writeln("Parkingsplatsen hittades inte, vänligen försök igen.");
+          await Future.delayed(Duration(seconds: 3));
+          continue; // Loop again
+        }
+
+        // If parking space is valid
+        consoleUtils.clearConsole();
+        stdout.writeln("Vald parkingsplats:\n$selectedPs");
+        break; // Exit the loop once a valid parking space is selected
+      }
+
+    stdout.write("Vill du redigera (e) eller ta bort (d) denna plats (eller 'b' för att gå tillbaka)? ");
     
     var action = stdin.readLineSync()?.trim().toLowerCase() ?? "";
-    
+
+    if (action == 'b') {
+      return; // Exit if the user chooses to go back
+    }
+
     // Lets user edit space
     if (action == 'e') {
       while (true) {
@@ -112,21 +156,15 @@ Future<void> manageParkingSpace() async {
           continue;
         }
 
-        int? pricePerHour = inputUtils.getValidIntPrice("Pris per timme(ange heltal):");
+        int? pricePerHour = inputUtils.getValidIntWithLoop("Pris per timme(ange heltal):");
         if(pricePerHour == null){
           consoleUtils.invalidChoice();
           continue;
         }
-        
-        // int? parkingSpaceId = inputUtils.getValidIntPrice("Parkingsplatsid (heltal tresiffrigt, börjar med 3 (tex 311)) \n använd samma som sist:");
-        // if(parkingSpaceId == null){
-        //   consoleUtils.invalidChoice();
-        //   continue;
-        // }
 
         // HTTP REQUEST
         ParkingSpace newParkingSpace = ParkingSpace(parkingSpaceId: selectedPs.parkingSpaceId, zone: zone, pricePerHour: pricePerHour);
-        await repoParkingSpace.update(selectedPs, newParkingSpace);
+        await repoParkingSpace.update(selectedPs.parkingSpaceId, newParkingSpace);
         stdout.write("Parkeringsplats uppdaterad.");
         await Future.delayed(Duration(seconds: 3));        
         return;
@@ -134,7 +172,7 @@ Future<void> manageParkingSpace() async {
     } else if (action == 'd') { // Lets user delete space 
 
       // HTTP REQUEST
-      await repoParkingSpace.delete(selectedPs);
+      await repoParkingSpace.delete(selectedPs.parkingSpaceId);
       stdout.write("Parkeringsplats är borttagen.");
       await Future.delayed(Duration(seconds: 3)); 
       return;

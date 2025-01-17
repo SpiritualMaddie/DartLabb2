@@ -15,7 +15,8 @@
             "name": "cli_server",
             "cwd": "cli_server",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "bin/server.dart"
         },
         {
             "name": "shared",
